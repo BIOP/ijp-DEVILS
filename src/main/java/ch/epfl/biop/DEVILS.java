@@ -1,8 +1,12 @@
 package ch.epfl.biop;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.gson.Gson;
 import ij.ImagePlus ;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -116,6 +120,7 @@ public class DEVILS {
 	 */
 	
 	private final static int n_cpus=Runtime.getRuntime().availableProcessors();
+	public static final String Devils_Parameter_Filename = "DevilsParameters.json";
 	
 	
 	/*
@@ -131,6 +136,12 @@ public class DEVILS {
 		
 		// to output suggestions for parameters
 		DevilMeasure dm = new DevilMeasure(dp) ;
+
+		// Store Devils Parameters as json file
+		// TODO : Q for Romain : should we support multiple files devilsed to a single folder ?
+		// If yes the parameter file name should be different for each file, or it will be erased
+		Gson gson = new Gson();
+		gson.toJson(dp, new FileWriter(dp.getOutputDir() + File.separator + Devils_Parameter_Filename));
 
 		for (int iSeries = 0 ; iSeries < dp.nSeries ; iSeries++ ){ // for each series of the selected file
         	// set the current Series

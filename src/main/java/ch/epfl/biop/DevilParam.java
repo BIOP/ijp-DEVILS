@@ -61,10 +61,10 @@ public class DevilParam {
 	/*
 	 * Image Param
 	 */
-	ChannelSeparator ch_separator;
-	BFVirtualStack vStack;
-	IFormatWriter writer ;
-	boolean littleEndian ;
+	transient ChannelSeparator ch_separator;
+	transient BFVirtualStack vStack;
+	transient IFormatWriter writer ;
+	transient boolean littleEndian ;
 	
 	int nSeries;
 	int nChannel;
@@ -206,6 +206,10 @@ public class DevilParam {
 	
 	public String getOutputPath(){
 		return output_dir_str + imageName ;
+	}
+
+	public String getOutputDir(){
+		return output_dir_str ;
 	}
 	
 	public String getOutputBitDepth(){

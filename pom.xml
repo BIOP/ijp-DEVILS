@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>19.2.0</version>
+		<version>27.0.1</version>
 		<relativePath />
 	</parent>
 
@@ -35,7 +35,7 @@
 		<developer>
 			<id>romainGuiet</id>
 			<name>Romain Guiet</name>
-			<url>http://biop.epfl.ch/INFO_Facility.html</url>
+			<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
 			<roles>
 				<role>lead</role>
 				<role>developer</role>
@@ -48,8 +48,20 @@
 	</developers>
 	<contributors>
 		<contributor>
-			<name>Olivier Burri</name>
-			<url>http://biop.epfl.ch/INFO_Facility.html</url>
+		<name>Olivier Burri</name>
+		<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
+		<roles>
+			<role>developer</role>
+			<role>debugger</role>
+			<role>reviewer</role>
+			<role>support</role>
+			<role>maintainer</role>
+		</roles>
+		<properties><id>lacan</id></properties>
+		</contributor>
+		<contributor>
+			<name>Nicolas Chiaruttini</name>
+			<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
 			<roles>
 				<role>developer</role>
 				<role>debugger</role>
@@ -57,9 +69,8 @@
 				<role>support</role>
 				<role>maintainer</role>
 			</roles>
-			<properties><id>oburri</id></properties>
+			<properties><id>chiarutt</id></properties>
 		</contributor>
-		
 	</contributors>
 
 	<mailingLists>
@@ -113,22 +124,20 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
         </dependency>
     </dependencies>
-	<dependencyManagement>
+	<!--<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>net.imagej</groupId>
 				<artifactId>ij</artifactId>
-				<version>1.51o</version>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement>-->
 	<repositories>
 		<repository>
-		    <id>imagej.public</id>
-		    <url>http://maven.imagej.net/content/groups/public</url>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
     	</repository>
     	
     	

@@ -104,7 +104,13 @@ public class DEVILS {
 			ImageProcessor ipr_corr_16 = ipr_ori_32.convertToShort(true);
 			// return DEVILed ipr
 			return ipr_corr_16;			
-		} else { 
+		} else if ( dp.getOutputBitDepth().equals("8-bit") ) {
+			// set min and max to the defined values
+			ipr_ori_32.setMinAndMax(min_final, max_final);
+			// convert to 8-bit
+			ImageProcessor ipr_corr_8 = ipr_ori_32.convertToByte(true);
+			return ipr_corr_8;
+		} else {
 			return ipr_ori_32;
 		}
 	}

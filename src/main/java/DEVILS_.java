@@ -63,7 +63,7 @@ public class DEVILS_ implements PlugIn {
 			outputBitDepth_string 	= Prefs.get("ch.epfl.biop.devil.outputBitDepth"		, "16-bit" 				);
 			outputDir_string		= Prefs.get("ch.epfl.biop.devil.outputDir"			, "" 					);
 			
-			String[] outputBitDepthChoice = {"16-bit","32-bit"};
+			String[] outputBitDepthChoice = {"8-bit","16-bit","32-bit"};
 			
 			GenericDialogPlus gd_adParam = new GenericDialogPlus("DEVILS advanced parameters");
 			gd_adParam.addMessage("You can specify an ouput directory.\n(Leave the field empty to create a DEVILS subfolder)");

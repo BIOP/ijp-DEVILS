@@ -29,6 +29,13 @@ IJ.log("-- Exporting As Xml-Hdf5 file format");
 	      				
 	def impV = FolderOpener.open(devils_image_folder, "virtual file="+file_name_filter)
 
+	println("file_name_filter:"+file_name_filter)
+	println("devilsParam.nChannel:"+devilsParam.nChannel)
+	println("devilsParam.nSlice:"+devilsParam.nSlice)
+	println("devilsParam.nFrame:"+devilsParam.nFrame)
+
+	//impV.show()
+
 	// re-order using ch_count and total plane number
 	def reordered_impV = HyperStackConverter.toHyperStack(impV, devilsParam.nChannel, devilsParam.nSlice, devilsParam.nFrame, "Composite")
 
@@ -47,9 +54,9 @@ IJ.log("-- Exporting As Xml-Hdf5 file format");
 											   " timepoints_per_partition=0"+
 											   " setups_per_partition=0"+
 											   " use_deflate_compression"+
-											   " export_path="+devilsParam.getOutputDir()+File.separator+file_name_filter+".xml")
+											   " export_path="+devilsParam.getOutputDir()+File.separator+"XmlHdf5"+File.separator+file_name_filter+".xml")
    
-   reordered_impV.close()
+    reordered_impV.close()
 				 
 }
 

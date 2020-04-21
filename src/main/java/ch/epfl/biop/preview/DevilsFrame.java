@@ -45,7 +45,7 @@ public class DevilsFrame{
 	
 	
 	
-	DevilsFrame(){  
+	public DevilsFrame(){  
 	
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

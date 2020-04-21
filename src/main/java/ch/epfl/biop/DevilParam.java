@@ -56,15 +56,17 @@ public class DevilParam {
 	// output
 	File 	output_dir 	;
 	String 	output_dir_str ;
-	
-	
+
+
+	transient String devilsMeasureLog; // to store min max values detected along serie, c, z, t -> serialized into DevilsParameters.json
+
 	/*
 	 * Image Param
 	 */
-	transient ChannelSeparator ch_separator;
-	transient BFVirtualStack vStack;
-	transient IFormatWriter writer ;
-	transient boolean littleEndian ;
+	transient ChannelSeparator ch_separator; // Made transient to prevent serialization
+	transient BFVirtualStack vStack; // Made transient to prevent serialization
+
+	transient boolean littleEndian;
 	
 	int nSeries;
 	int nChannel;

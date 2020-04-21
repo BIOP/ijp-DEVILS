@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.gson.Gson;
+import ij.IJ;
 import ij.ImagePlus ;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -143,10 +144,16 @@ public class DEVILS {
 		// to output suggestions for parameters
 		DevilMeasure dm = new DevilMeasure(dp) ;
 
+		// Final Log print with measured value
+		dp.devilsMeasureLog = dm.logMeasure();
+
 		// Store Devils Parameters as json file
 		// TODO : Q for Romain : should we support multiple files devilsed to a single folder ?
 		// If yes the parameter file name should be different for each file, or it will be erased
 		Gson gson = new Gson();
+		IJ.log(dp.devilsMeasureLog);
+		IJ.log("ALOOOORS?");
+		IJ.log(gson.toJson(dp));
 		gson.toJson(dp, new FileWriter(dp.getOutputDir() + File.separator + Devils_Parameter_Filename));
 
 		for (int iSeries = 0 ; iSeries < dp.nSeries ; iSeries++ ){ // for each series of the selected file
@@ -230,8 +237,9 @@ public class DEVILS {
        	// DO IT ! 
        	startAndJoin(threads);  
         }
-       	// Final Log print with measured value 
-       	dm.logMeasure();
+
+
+
             	
 	} 
 	

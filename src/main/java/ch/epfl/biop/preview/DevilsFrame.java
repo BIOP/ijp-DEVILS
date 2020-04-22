@@ -45,7 +45,7 @@ public class DevilsFrame{
 	
 	
 	
-	public DevilsFrame(){  
+	DevilsFrame(){  
 	
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -178,7 +178,7 @@ public class DevilsFrame{
 	                blur=scrollBlur.getValue()/10.0; 
 	    			valueBlur.setText(""+ blur);
 	    			dc.setBlur(blur);
-	    			if (valueMultiCore) dc.multiThreadCalculate();
+	    			if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
 	    			else dc.showDisplay();
 	    			
 	                }  
@@ -188,7 +188,7 @@ public class DevilsFrame{
 	    				ball=slideBall.getValue();
 	                    valueBall.setText(""+ ball);
 	                    dc.setBall(ball);
-	                    if (valueMultiCore) dc.multiThreadCalculate();
+	                    if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
 		    			else dc.showDisplay();
 	                }
 	            });
@@ -198,7 +198,7 @@ public class DevilsFrame{
 	                    valueDisplay.setText(""+ display);
 	                    double v=10.0/display;
 	                    dc.setDisplay(v);
-	                    if (valueMultiCore) dc.multiThreadCalculate();
+	                    if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
 		    			else dc.showDisplay();
 	                }
 	            });
@@ -207,8 +207,8 @@ public class DevilsFrame{
 	    				int s=setSlice.getValue();
 	                    slice.setText(""+ convertSlicePosition(s));
 	                    dc.setSlice(s);
-//	                    dc.updateSlice();
-	                    if (valueMultiCore) dc.multiThreadCalculate();
+	                    dc.updateSlice();
+	                    if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
 		    			else dc.showDisplay();
 	                }
 	            });
@@ -216,7 +216,7 @@ public class DevilsFrame{
 			public void actionPerformed(final ActionEvent e){
 					dc.updateSlice();
 					
-					if (valueMultiCore) dc.multiThreadCalculate();
+					if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
 	    			else dc.showDisplay();
 				}
 	    });
@@ -230,18 +230,19 @@ public class DevilsFrame{
 					dc.setSubstractBackground(false);
 					
 				}
-				if (valueMultiCore) dc.multiThreadCalculate();
+				if (valueMultiCore) dc.showDisplay(dc.multiThreadCalculate());
     			else dc.showDisplay();
 			}
 	    });
 	    multiCore.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e){
 				if (multiCore.isSelected()) {
-					dc.multiThreadCalculate();
+					valueMultiCore=true;
+					dc.showDisplay(dc.multiThreadCalculate());
 				} else {
 					
 					dc.showDisplay();
-					
+					valueMultiCore=false;
 				}
 				
 			}

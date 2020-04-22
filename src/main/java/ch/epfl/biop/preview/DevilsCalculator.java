@@ -29,6 +29,7 @@ public class DevilsCalculator extends Thread  {
 	
 	
 	private final static int n_cpus=Runtime.getRuntime().availableProcessors();
+	
 	//=====================Constructors===================================================
 	
 	public DevilsCalculator(ImageStack stack){
@@ -75,8 +76,6 @@ public class DevilsCalculator extends Thread  {
 	 
 	//=====================Functions===================================================
 	
-	
-
 	public void substractBackground(ImagePlus imp){
 		BackgroundSubtracter bs=new BackgroundSubtracter();
 		bs.rollingBallBackground(imp.getProcessor(), ball,false, false, true, true, true);
@@ -97,20 +96,34 @@ public class DevilsCalculator extends Thread  {
 	public void setDisplay(double v) {
 		this.displayValue=v;
 	}
+	
 	public void showDisplay() {
+		long start=System.currentTimeMillis();
 		if(!this.display) {
-			output().show();
+			calculate().show();
 			this.display=true;	
 		} else {
-			output();
+			this.output=calculate();
+			this.output.show();
 		}
-		
+		long end=System.currentTimeMillis();    
+		IJ.log("Processing time for one slice in msec: "+(end-start));
 		
 	}
 	
 	public void showDisplay(ImagePlus imp) {
-		imp.show();
-		this.display=true;
+		long start=System.currentTimeMillis();
+		if(!display) {
+			this.output=imp;
+			this.display=true;
+			this.output.show();
+			
+		} else {
+			this.output.setProcessor(imp.getProcessor());
+			this.output.show();
+		}
+		long end=System.currentTimeMillis();    
+		IJ.log("Multithread Processing time for one slice in msec: "+(end-start));
 	}
 	
 	//====================getMethods()=====================================================
@@ -147,7 +160,8 @@ public class DevilsCalculator extends Thread  {
 		
 	}
 	//=====================ImagePlus===================================================
-	private ImagePlus output() {
+	
+	private synchronized ImagePlus calculate() {
 		 ImagePlus imp;
 		
 		if (!display) {
@@ -173,7 +187,7 @@ public class DevilsCalculator extends Thread  {
 		return imp;
 	}
 	
-	ImagePlus fuse(ImagePlus imp) {
+	private ImagePlus fuse(ImagePlus imp) {
 		
 		int w=imp.getWidth();
 		int h=imp.getHeight();
@@ -241,6 +255,7 @@ public class DevilsCalculator extends Thread  {
 	
 	
 	//=====================Image Processors===================================================
+	
 	private ImageProcessor blurImage(ImageProcessor ip, double blur) {
 		ImageProcessor out=ip.duplicate();
 		out.blurGaussian(blur);
@@ -256,8 +271,8 @@ public class DevilsCalculator extends Thread  {
 			out.resetMinAndMax();
 			this.min=(int)out.getMin();
 			this.max=(int)out.getMax();
-			IJ.log("Min: "+min);
-			IJ.log("Max: "+max);
+//			IJ.log("Min: "+min);//
+//			IJ.log("Max: "+max);
 		} else 	out.setMinAndMax(min, max);
 
 		out=out.convertToByteProcessor();
@@ -310,8 +325,8 @@ public class DevilsCalculator extends Thread  {
 			
 		} else 	out.setMinAndMax(min, max);
 */		
-		IJ.log("ImageProcessor   Min:"+out.getStatistics().min+"   Max"+out.getStatistics().max);
-		IJ.log("Setting: Min"+Math.sqrt(this.min)+"   Max"+Math.sqrt(this.max));
+//		IJ.log("ImageProcessor   Min:"+out.getStatistics().min+"   Max"+out.getStatistics().max);
+//		IJ.log("Setting: Min"+Math.sqrt(this.min)+"   Max"+Math.sqrt(this.max));
 		if (this.scale) {
 			out.setMinAndMax(Math.sqrt(this.min), Math.sqrt(this.max));
 		} else out.resetMinAndMax();
@@ -321,19 +336,27 @@ public class DevilsCalculator extends Thread  {
 		return out;
 	}
 	
-	/** Create a Thread[] array as large as the number of processors available. 
-	    * From Stephan Preibisch's Multithreading.java class. See: 
-	    * http://repo.or.cz/w/trakem2.git?a=blob;f=mpi/fruitfly/general/MultiThreading.java;hb=HEAD 
-	    */  
-    private Thread[] newThreadArray() {  
+/************************************************************************************************
+ *MultiThread Section
+*Contains the methods to use multuiple cores for the image display
+ * 
+ ***********************************************************************************************/
+	
+/** Create a Thread[] array as large as the number of processors available. 
+* From Stephan Preibisch's Multithreading.java class. See: 
+* http://repo.or.cz/w/trakem2.git?a=blob;f=mpi/fruitfly/general/MultiThreading.java;hb=HEAD 
+*/  
+    
+	private Thread[] newThreadArray() {  
         int n_cpus = Runtime.getRuntime().availableProcessors();  
         return new Thread[n_cpus];  
     }  
 	  
-	/** Start all given threads and wait on each of them until all are done. 
-	* From Stephan Preibisch's Multithreading.java class. See: 
-	* http://repo.or.cz/w/trakem2.git?a=blob;f=mpi/fruitfly/general/MultiThreading.java;hb=HEAD 
-	*/  
+/** Start all given threads and wait on each of them until all are done. 
+* From Stephan Preibisch's Multithreading.java class. See: 
+* http://repo.or.cz/w/trakem2.git?a=blob;f=mpi/fruitfly/general/MultiThreading.java;hb=HEAD 
+*/  
+    
     public static void startAndJoin(DevilsCalculator[] calculate)  
     {  
         for (int ithread = 0; ithread < n_cpus; ++ithread)  
@@ -351,7 +374,13 @@ public class DevilsCalculator extends Thread  {
             throw new RuntimeException(ie);  
         }  
     }
-    public static ImageStack getResultStack(DevilsCalculator [] diffArray){
+ /** Gets the resulting ImageStack from the method multithreadCalculate()
+ *  
+ * @param diffArray
+ * @return ImageStack
+ */
+    
+    public static synchronized ImageStack getResultStack(DevilsCalculator [] diffArray){
     	
     	int w=diffArray[0].width;
     	int h=diffArray[0].height;
@@ -365,12 +394,11 @@ public class DevilsCalculator extends Thread  {
     	
     	return stack;
     }
-    /* ******************************************************************************
-     * Defines the Array of DevilCalculators()
-     * @return array of DevilsCalculators
-     ********************************************************************************/
+ /** Defines the Array of DevilCalculators() from the ImagePlus this.input
+ * @return array of DevilsCalculators
+ ********************************************************************************/
     
-    public DevilsCalculator []  getArray() {								
+    public synchronized DevilsCalculator []  getArray() {								
 		
     	DevilsCalculator array []=new DevilsCalculator[n_cpus];
 		
@@ -411,24 +439,23 @@ public class DevilsCalculator extends Thread  {
 //		
 		return array;
     }
-    /**********************************************************************************************************************************
-     * method to do the calculation with multi-threads 
-     * calls the method which defines the array of Devils Calculators
-     * @return ImagePlus
-     **********************************************************************************************************************************/
+ /** ImagePlus to do the calculation with multi-threads 
+ * calls the method which defines the array of Devils Calculators
+ * @return ImagePlus
+ **********************************************************************************************************************************/
     
     ImagePlus multiThreadCalculate(){
 		
 //		long start=System.currentTimeMillis();
 		
 		final DevilsCalculator [] calculate = this.duplicate().getArray(); 
-//		
+		
 		
 		startAndJoin(calculate);
 		
 //		long end=System.currentTimeMillis();    
-//		IJ.log("Processing time convolution in msec: "+(end-start));
-//		   
+//		IJ.log("Inside Processing time for one slice in msec: "+(end-start));
+		   
 		ImagePlus imp;
 		
 		if (!display) {
@@ -442,12 +469,18 @@ public class DevilsCalculator extends Thread  {
 		return imp;
 	    
 	}    
-
+/** Returns the results of the calculation based on multi-threads
+ * 
+ * @return ImageProcessor
+ */
     public ImageProcessor getResultProcessor(){
 		return this.outIP;
 	}
+ /** Calculation in the individual cores during the multithreadCalculate()
+  * 
+  */
     public void run() {
-    	this.outIP=this.output().getProcessor();
+    	this.outIP=this.calculate().getProcessor();
     	
     }
 }

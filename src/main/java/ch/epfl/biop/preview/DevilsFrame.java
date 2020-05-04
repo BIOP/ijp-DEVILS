@@ -16,6 +16,8 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import ch.epfl.biop.lazyprocessing.LazyImagePlus;
+import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -43,7 +45,7 @@ public class DevilsFrame{
 	private JCheckBox back,multiCore;
 	private JLabel label1, label2, label3, label4, label5,label6, valueBall, valueDisplay,valueBlur, slice;
 	
-	
+	final public ImagePlus preview;
 	
 	public DevilsFrame(){  
 	
@@ -175,13 +177,13 @@ public class DevilsFrame{
 	    
 	    scrollBlur.addAdjustmentListener(new AdjustmentListener() {
 	    	public void adjustmentValueChanged(AdjustmentEvent e) {  
-	                blur=scrollBlur.getValue()/10.0; 
-	    			valueBlur.setText(""+ blur);
-	    			dc.setBlur(blur);
-	    			if (valueMultiCore) dc.multiThreadCalculate();
-	    			else dc.showDisplay();
-	    			
-	                }  
+						blur=scrollBlur.getValue()/10.0;
+						valueBlur.setText(""+ blur);
+						dc.setBlur(blur);
+						if (valueMultiCore) dc.multiThreadCalculate();
+						else dc.showDisplay();
+						LazyImagePlus.redraw(preview);
+	                }
 	            });
 	    slideBall.addChangeListener(new ChangeListener() {
 	    	public void stateChanged(ChangeEvent e) {
@@ -190,6 +192,7 @@ public class DevilsFrame{
 	                    dc.setBall(ball);
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
+						LazyImagePlus.redraw(preview);
 	                }
 	            });
 	    setDisplay.addChangeListener(new ChangeListener() {
@@ -200,6 +203,7 @@ public class DevilsFrame{
 	                    dc.setDisplay(v);
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
+						LazyImagePlus.redraw(preview);
 	                }
 	            });
 	    setSlice.addChangeListener(new ChangeListener() {
@@ -210,6 +214,7 @@ public class DevilsFrame{
 //	                    dc.updateSlice();
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
+						LazyImagePlus.redraw(preview);
 	                }
 	            });
 	    process.addActionListener(new ActionListener() {
@@ -218,6 +223,7 @@ public class DevilsFrame{
 					
 					if (valueMultiCore) dc.multiThreadCalculate();
 	    			else dc.showDisplay();
+					LazyImagePlus.redraw(preview);
 				}
 	    });
 	    back.addActionListener(new ActionListener() {
@@ -232,6 +238,7 @@ public class DevilsFrame{
 				}
 				if (valueMultiCore) dc.multiThreadCalculate();
     			else dc.showDisplay();
+				LazyImagePlus.redraw(preview);
 			}
 	    });
 	    multiCore.addActionListener(new ActionListener() {
@@ -243,11 +250,12 @@ public class DevilsFrame{
 					dc.showDisplay();
 					
 				}
-				
+				LazyImagePlus.redraw(preview);
 			}
 	    });
-	    
-		
+
+		preview = LazyImagePlus.create(imp, dc::apply, "_DEVILS_PREVIEW");
+		preview.show();
 	}
 	
 	int convertSlicePosition(int pos) {

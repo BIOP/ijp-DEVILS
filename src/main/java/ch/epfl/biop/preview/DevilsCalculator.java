@@ -1,10 +1,10 @@
 package ch.epfl.biop.preview;
 
+import ch.epfl.biop.lazyprocessing.LazyVirtualStack;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.WindowManager;
-import ij.gui.Overlay;
 import ij.gui.Roi;
 import ij.plugin.filter.BackgroundSubtracter;
 import ij.process.ByteProcessor;
@@ -30,10 +30,6 @@ public class DevilsCalculator extends Thread  {
 	
 	private final static int n_cpus=Runtime.getRuntime().availableProcessors();
 	//=====================Constructors===================================================
-	
-	public DevilsCalculator(ImageStack stack){
-		this.stack=stack;
-	}
 	
 	public DevilsCalculator(ImagePlus imp){
 		if (imp.getStackSize()>1) {
@@ -448,6 +444,28 @@ public class DevilsCalculator extends Thread  {
 	}
     public void run() {
     	this.outIP=this.output().getProcessor();
-    	
+
     }
+
+
+    // --------------------------------------------------
+
+	/**
+	 * Function which applies the current set of operation on an imageprocessor
+	 * this function can be directly fed into a {@link LazyImagePlus}
+	 * @param in
+	 * @return
+	 */
+	public ImageProcessor apply(ImageProcessor in) {
+		ImageProcessor ip=differenceIP(	in.duplicate(),
+				blurImage(in.duplicate(),blur)
+		);
+		ip=powIP(ip,displayValue);
+
+		if (background) {
+			(new BackgroundSubtracter()).rollingBallBackground(ip, ball,false, false, true, true, true);
+		}
+
+		return ip;
+	}
 }

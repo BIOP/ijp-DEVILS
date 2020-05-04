@@ -26,9 +26,9 @@ public class DEVILS_ implements PlugIn {
 				
 		GenericDialogPlus gd = new GenericDialogPlus("DEVILS parameters");
 		
-		gd.addFileField("Select File", defaultPath);
-		gd.addNumericField("Largest object_size (in pixel)", objectSize, 0);
-		gd.addCheckbox("Advanced parameters", advancedParam);
+		gd.addFileField("Select_File", defaultPath);
+		gd.addNumericField("Largest_object_size (in pixel)", objectSize, 0);
+		gd.addCheckbox("Advanced_parameters", advancedParam);
 		gd.showDialog();
 		
 		// if "canceled" send error and return

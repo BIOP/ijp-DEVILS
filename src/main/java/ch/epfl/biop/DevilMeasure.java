@@ -1,6 +1,8 @@
 package ch.epfl.biop;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DevilMeasure {
 	
@@ -105,7 +107,7 @@ public class DevilMeasure {
 	}
 	
 	
-	public String logMeasure(){
+	public void logMeasure(){
 
 		String measureMessage = "--------------------------------------------------------\n";
 
@@ -127,8 +129,16 @@ public class DevilMeasure {
 
 		ij.IJ.log(measureMessage);
 
-       	return measureMessage;
-	}	
+	}
+
+	public Map<String, Double> getLogMeasureAsMap() {
+		Map<String, Double> minMaxRes = new HashMap<>();
+		for  (int i=0 ; i < this.nChannel ; i++){
+			minMaxRes.put("channel_"+(i+1)+"_min",  getMinFinalOfChannel( i ));
+			minMaxRes.put("channel_"+(i+1)+"_max",  getMaxFinalOfChannel( i ));
+		}
+		return minMaxRes;
+	}
 	
 /*
  *  

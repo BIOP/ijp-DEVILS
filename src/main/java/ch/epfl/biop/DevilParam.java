@@ -2,6 +2,7 @@ package ch.epfl.biop;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 
 import ij.IJ;
 
@@ -57,8 +58,7 @@ public class DevilParam {
 	File 	output_dir 	;
 	String 	output_dir_str ;
 
-
-	transient String devilsMeasureLog; // to store min max values detected along serie, c, z, t -> serialized into DevilsParameters.json
+	Map<String, Double> devilsMeasureLog; // to store min max values detected along serie, c, z, t -> serialized into DevilsParameters.json
 
 	/*
 	 * Image Param

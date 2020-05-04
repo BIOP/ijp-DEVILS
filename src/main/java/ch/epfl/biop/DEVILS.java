@@ -144,18 +144,6 @@ public class DEVILS {
 		// to output suggestions for parameters
 		DevilMeasure dm = new DevilMeasure(dp) ;
 
-		// Final Log print with measured value
-		dp.devilsMeasureLog = dm.logMeasure();
-
-		// Store Devils Parameters as json file
-		// TODO : Q for Romain : should we support multiple files devilsed to a single folder ?
-		// If yes the parameter file name should be different for each file, or it will be erased
-		Gson gson = new Gson();
-		IJ.log(dp.devilsMeasureLog);
-		IJ.log("ALOOOORS?");
-		IJ.log(gson.toJson(dp));
-		gson.toJson(dp, new FileWriter(dp.getOutputDir() + File.separator + Devils_Parameter_Filename));
-
 		for (int iSeries = 0 ; iSeries < dp.nSeries ; iSeries++ ){ // for each series of the selected file
         	// set the current Series
 			dp.setCurrentSeries(iSeries);
@@ -238,7 +226,17 @@ public class DEVILS {
        	startAndJoin(threads);  
         }
 
+		dm.logMeasure();
+		// Store Devils Parameters as json file
 
+		// Final Log print with measured value
+		dp.devilsMeasureLog = dm.getLogMeasureAsMap(); // Fetch extra info after the processing is done
+
+		Gson gson = new Gson();
+		String outputString = gson.toJson(dp);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(dp.getOutputDir() + File.separator + Devils_Parameter_Filename));
+		writer.write(outputString);
+		writer.close();
 
             	
 	} 

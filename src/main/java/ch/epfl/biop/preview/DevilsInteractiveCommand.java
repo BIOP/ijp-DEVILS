@@ -51,11 +51,11 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
 
     public void run() {
 
-        dp = new DevilParam("","", objectSize, advancedParam, min_final_string, max_final_string, objectSize_string, outputBitDepth_string);
+        dp = new DevilParam(origin, objectSize, advancedParam, min_final_string, max_final_string, objectSize_string, outputBitDepth_string);
 
         dm = new DevilMeasure(dp);
 
-        Function<ImageProcessor, ImageProcessor> devilsProcessor = (ipr) -> DEVILS.DEVIL_ipr(dp,dm,new int[]{1,1,1,1},ipr);
+        Function<ImageProcessor, ImageProcessor> devilsProcessor = (ipr) -> DEVILS.DEVIL_ipr(dp,dm,new int[]{0,0,0,0},ipr);
 
         if ((liveComputedImage == null)||(previousBitDepth != liveComputedImage.getBitDepth())) {
             // TODO : restore czt location

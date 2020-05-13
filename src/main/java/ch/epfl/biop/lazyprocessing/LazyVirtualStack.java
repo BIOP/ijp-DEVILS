@@ -60,12 +60,6 @@ public class LazyVirtualStack extends VirtualStack {
     /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
     public Object getPixels(int n) {
         ImageProcessor ip = getProcessor(n);
-        /*if (imagePlusLocalizer==null) {
-            ip = imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n)));
-        } else {
-            // Localize in czt
-            ip = imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n)));
-        }*/
         if (ip!=null)
             return ip.getPixels();
         else

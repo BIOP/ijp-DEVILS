@@ -18,16 +18,16 @@ public class LazyVirtualStack extends VirtualStack {
     ImagePlus origin;
 
     // Operation applied on an ImageProcessor
-    Function<ImageProcessor, ImageProcessor> imageProcessorFunction;
+    Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction;
 
     int resultingBitDepth;
 
-    public LazyVirtualStack(ImagePlus origin, Function<ImageProcessor, ImageProcessor> imageProcessorFunction) {
+    public LazyVirtualStack(ImagePlus origin, Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         this.origin = origin;
         this.imageProcessorFunction = imageProcessorFunction;
         // Applies the imageProcessorFunction on the first imageprocessor :
         // allows to know what is the output type of the resulting imagestack
-        ImageProcessor ipr = imageProcessorFunction.apply(origin.getStack().getProcessor(1));
+        ImageProcessor ipr = imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(1)));
 
         if (ipr instanceof ByteProcessor) {
             resultingBitDepth = 8;
@@ -40,17 +40,28 @@ public class LazyVirtualStack extends VirtualStack {
         } else {
             throw new UnsupportedOperationException("Unknown resulting ImageProcessor");
         }
-
     }
 
 
-    public void updateFunction(Function<ImageProcessor, ImageProcessor> imageProcessorFunction) {
+    public void updateFunction(Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         this.imageProcessorFunction = imageProcessorFunction;
+    }
+
+    ImagePlus imagePlusLocalizer = null;
+
+    public void setImagePlusCZTSLocalizer(ImagePlus imp) {
+        this.imagePlusLocalizer = imp;
     }
 
     /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
     public Object getPixels(int n) {
-        ImageProcessor ip = imageProcessorFunction.apply(origin.getStack().getProcessor(n));
+        ImageProcessor ip;
+        if (imagePlusLocalizer==null) {
+            ip = imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n)));
+        } else {
+            // Localize in czt
+            ip = imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n)));
+        }
         if (ip!=null)
             return ip.getPixels();
         else
@@ -59,7 +70,12 @@ public class LazyVirtualStack extends VirtualStack {
 
     @Override
     public ImageProcessor getProcessor(int n) {
-        return imageProcessorFunction.apply(origin.getStack().getProcessor(n));
+        if (imagePlusLocalizer==null) {
+            return imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n)));
+        } else {
+            // Localize in czt
+            return imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n)));
+        }
     }
 
     @Override

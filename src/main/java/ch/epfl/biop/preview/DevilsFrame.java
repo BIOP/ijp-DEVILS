@@ -16,8 +16,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import ch.epfl.biop.lazyprocessing.LazyImagePlus;
-import ij.CompositeImage;
+import ch.epfl.biop.lazyprocessing.LazyImagePlusHelper;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -182,7 +181,7 @@ public class DevilsFrame{
 						dc.setBlur(blur);
 						if (valueMultiCore) dc.multiThreadCalculate();
 						else dc.showDisplay();
-						LazyImagePlus.redraw(preview);
+						LazyImagePlusHelper.redraw(preview);
 	                }
 	            });
 	    slideBall.addChangeListener(new ChangeListener() {
@@ -192,7 +191,7 @@ public class DevilsFrame{
 	                    dc.setBall(ball);
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
-						LazyImagePlus.redraw(preview);
+						LazyImagePlusHelper.redraw(preview);
 	                }
 	            });
 	    setDisplay.addChangeListener(new ChangeListener() {
@@ -203,7 +202,7 @@ public class DevilsFrame{
 	                    dc.setDisplay(v);
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
-						LazyImagePlus.redraw(preview);
+						LazyImagePlusHelper.redraw(preview);
 	                }
 	            });
 	    setSlice.addChangeListener(new ChangeListener() {
@@ -214,7 +213,7 @@ public class DevilsFrame{
 //	                    dc.updateSlice();
 	                    if (valueMultiCore) dc.multiThreadCalculate();
 		    			else dc.showDisplay();
-						LazyImagePlus.redraw(preview);
+						LazyImagePlusHelper.redraw(preview);
 	                }
 	            });
 	    process.addActionListener(new ActionListener() {
@@ -223,7 +222,7 @@ public class DevilsFrame{
 					
 					if (valueMultiCore) dc.multiThreadCalculate();
 	    			else dc.showDisplay();
-					LazyImagePlus.redraw(preview);
+					LazyImagePlusHelper.redraw(preview);
 				}
 	    });
 	    back.addActionListener(new ActionListener() {
@@ -238,7 +237,7 @@ public class DevilsFrame{
 				}
 				if (valueMultiCore) dc.multiThreadCalculate();
     			else dc.showDisplay();
-				LazyImagePlus.redraw(preview);
+				LazyImagePlusHelper.redraw(preview);
 			}
 	    });
 	    multiCore.addActionListener(new ActionListener() {
@@ -250,11 +249,11 @@ public class DevilsFrame{
 					dc.showDisplay();
 					
 				}
-				LazyImagePlus.redraw(preview);
+				LazyImagePlusHelper.redraw(preview);
 			}
 	    });
 
-		preview = LazyImagePlus.create(imp, dc::apply, "_DEVILS_PREVIEW");
+		preview = LazyImagePlusHelper.create(imp, dc::apply, "_DEVILS_PREVIEW");
 		preview.show();
 	}
 	

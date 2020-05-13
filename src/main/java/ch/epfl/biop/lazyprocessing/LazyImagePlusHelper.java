@@ -15,14 +15,27 @@ import java.util.function.Function;
 
 public class LazyImagePlusHelper extends ImagePlus {
 
-        public static ImagePlus create(ImagePlus origin, Function<ImageProcessor, ImageProcessor> imageProcessorFunction, String suffix) {
-            LazyVirtualStack vds = new LazyVirtualStack(origin, imageProcessorFunction);
-            ImagePlus impv = new ImagePlus();
-            impv.setStack("", vds);
-            ImagePlus out = HyperStackConverter.toHyperStack(impv, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
-            out.setTitle(origin.getTitle()+suffix);
-            return out;
-        }
+    public static ImagePlus create(ImagePlus origin, String suffix, Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
+        LazyVirtualStack vds = new LazyVirtualStack(origin, imageProcessorFunction);
+        vds.setImagePlusCZTSLocalizer(origin);
+        ImagePlus impv = new ImagePlus();
+        impv.setStack("", vds);
+        ImagePlus out = HyperStackConverter.toHyperStack(impv, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
+        out.setTitle(origin.getTitle()+suffix);
+        return out;
+    }
+
+    public static ImagePlus create(ImagePlus origin, Function<ImageProcessor, ImageProcessor> imageProcessorFunction, String suffix) {
+        Function<LocalizedImageProcessor, ImageProcessor> ipf = (lip) -> imageProcessorFunction.apply(lip.ip);
+
+        LazyVirtualStack vds = new LazyVirtualStack(origin, ipf);
+        vds.setImagePlusCZTSLocalizer(origin);
+        ImagePlus impv = new ImagePlus();
+        impv.setStack("", vds);
+        ImagePlus out = HyperStackConverter.toHyperStack(impv, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
+        out.setTitle(origin.getTitle()+suffix);
+        return out;
+    }
 
         public static void redraw(ImagePlus imp) {
 

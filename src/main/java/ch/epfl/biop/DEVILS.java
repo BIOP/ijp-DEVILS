@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.gson.Gson;
-import ij.IJ;
 import ij.ImagePlus ;
 import ij.io.FileSaver;
 import ij.measure.Calibration;

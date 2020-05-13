@@ -34,7 +34,7 @@ public class DEVILS_ implements PlugIn {
 		
 		gd.addFileField("Select_File", defaultPath);
 		gd.addNumericField("Largest_object_size (in pixel)", objectSize, 0);
-		gd.addCheckbox("Export XmlHdf5", exportAsXmlHdf5);
+		gd.addCheckbox("Export_XmlHdf5", exportAsXmlHdf5);
 		gd.addCheckbox("Advanced_parameters", advancedParam);
 		gd.showDialog();
 		
@@ -206,7 +206,6 @@ public class DEVILS_ implements PlugIn {
 		// start ImageJ
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
-		// new ImageJ();
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");

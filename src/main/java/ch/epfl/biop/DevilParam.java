@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ij.IJ;
 
+import ij.ImagePlus;
 import loci.common.services.ServiceFactory;
 import loci.formats.ChannelSeparator;
 import loci.formats.IFormatWriter;
@@ -99,6 +100,76 @@ public class DevilParam {
 		
 		initImage();
 		
+	}
+
+	// Constructor for the previewer
+	public DevilParam(ImagePlus imp, int objectSize, boolean advancedParam, String min_final_string, String max_final_string, String objectSize_string, String outputBitDepth_string) {
+
+		this.defaultPath 		= "";//defaultPath;
+		this.output_dir_str 	= "";//outputDir;
+
+		this.objectSize 		= objectSize;
+		this.advancedParam 		= advancedParam;
+
+		//this.maxNorm_string 	= max_norm_string;
+		this.minFinal_string 	= min_final_string;
+		this.maxFinal_string 	= max_final_string;
+		this.objectSize_string	= objectSize_string;
+
+		this.outputBitDepth_string = outputBitDepth_string;
+
+		//initFilesAndFolder();
+
+		//initImage();
+
+		this.littleEndian = true;//ch_separator.isLittleEndian();
+
+		this.nSeries 			= 1;//ch_separator.getSeriesCount()	;
+		this.nChannel			= imp.getNChannels();//ch_separator.getSizeC();
+		this.nSlice				= imp.getNSlices();//ch_separator.getSizeZ();
+		this.nFrame				= imp.getNFrames();//ch_separator.getSizeT();
+		this.perSeriesPlanesNbr	= nChannel * nSlice * nFrame;
+		this.totalPlanesNbr 	= nSeries * nChannel * nSlice * nFrame;
+
+		//this.vStack = new BFVirtualStack(this.defaultPath, this.ch_separator, false, false, false);
+
+		IJ.log( "nSeries "+String.valueOf(nSeries));
+		IJ.log( "nChannel "+String.valueOf(nChannel));
+		IJ.log( "nSlice "+String.valueOf(nSlice));
+		IJ.log( "nFrame "+String.valueOf(nFrame));
+		IJ.log( "totalPlanesNbr "+String.valueOf(totalPlanesNbr));
+
+		// Now that we know file dimensions, we check that the parameters are in sufficient number (to cover all channels)
+		//checkParamMaxNorm();
+		checkParamMinFinal();
+		checkParamMaxFinal();
+		checkParamObjectSize();
+		// Retrieve Calibrataion
+		//final MetadataRetrieve retrieve = service.asRetrieve(ch_separator.getMetadataStore());
+
+		// calibration
+//		final String dimOrder = ch_separator.getDimensionOrder().toUpperCase();
+
+//		final int posX = dimOrder.indexOf( 'X' );
+		//Length calX = retrieve.getPixelsPhysicalSizeX( 0 );
+		/*if ( posX >= 0 && calX != null && calX.value().doubleValue() != 0 )
+			voxelSize[0] = calX.value().doubleValue();
+
+		final int posY = dimOrder.indexOf( 'Y' );
+		Length calY = retrieve.getPixelsPhysicalSizeY( 0 );
+		if ( posY >= 0 && calY != null && calY.value().doubleValue() != 0 )
+			voxelSize[1] = calY.value().doubleValue();
+
+		final int posZ = dimOrder.indexOf( 'Z' );
+		Length calZ = retrieve.getPixelsPhysicalSizeZ( 0 );
+		if ( posZ >= 0 && calZ != null && calZ.value().doubleValue() != 0 )
+			voxelSize[2] = calZ.value().doubleValue();
+		//String voxel_depth = new Double(voxelSize[2]).toString();
+		//ij.IJ.log(" voxel_depth : "+voxel_depth);*/
+
+		voxelSize[0] = imp.getCalibration().pixelWidth;
+		voxelSize[1] = imp.getCalibration().pixelHeight;
+		voxelSize[2] = imp.getCalibration().pixelDepth;
 	}
 	
 	/*

@@ -126,7 +126,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.scala-lang.modules:scala-xml_2.12:1.0.6" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.imagej:imagej-ui-swing:0.22.0" level="project" />
     <orderEntry type="library" name="Maven: com.miglayout:miglayout:swing:3.7.4" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.jfree:jfreechart:1.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jfree:jfreechart:1.5.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jhotdraw:jhotdraw:7.6.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.imagej:imagej-ui-awt:0.3.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.scijava:scijava-plugins-commands:0.2.3" level="project" />
@@ -140,10 +140,29 @@
     <orderEntry type="library" name="Maven: com.fifesoft:languagesupport:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.fifesoft:autocomplete:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.mozilla:rhino:1.7.6" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:bigdataviewer_fiji:5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:bigdataviewer-core:5.1.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:spim_data:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: cisd:jhdf5:14.12.6" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.scijava:ui-behaviour:1.7.4" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.23" level="project" />
+    <orderEntry type="library" name="Maven: net.imglib2:imglib2-ij:2.0.0-beta-44" level="project" />
+    <orderEntry type="library" name="Maven: net.imglib2:imglib2-ui:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:SPIM_Registration:5.0.19" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:Fiji_Plugins:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:SPIM_Opener:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:VIB-lib:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:pal-optimization:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:legacy-imglib1:1.1.9" level="project" />
+    <orderEntry type="library" name="Maven: net.imglib2:imglib2-algorithm-gpl:0.2.3" level="project" />
+    <orderEntry type="library" name="Maven: mpicbg:mpicbg:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: net.java.dev.jna:jna:4.5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.scijava:vecmath:1.6.0-scijava-2" level="project" />
     <orderEntry type="library" name="Maven: net.imagej:imagej-legacy:0.35.0" level="project" />
     <orderEntry type="library" name="Maven: net.imagej:ij1-patcher:0.12.9" level="project" />
     <orderEntry type="library" name="Maven: net.imglib2:imglib2:5.6.3" level="project" />
-    <orderEntry type="library" name="Maven: net.imglib2:imglib2-ij:2.0.0-beta-44" level="project" />
     <orderEntry type="library" name="Maven: net.imglib2:imglib2-roi:0.7.0" level="project" />
     <orderEntry type="library" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.scijava:scijava-search:0.6.0" level="project" />
@@ -193,8 +212,6 @@
     <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5.3" level="project" />
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.15" level="project" />
     <orderEntry type="library" name="Maven: woolz:JWlz:1.4.0" level="project" />
-    <orderEntry type="library" name="Maven: cisd:jhdf5:14.12.6" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
     <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-forms:1.7.2" level="project" />
     <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-common:1.7.0" level="project" />

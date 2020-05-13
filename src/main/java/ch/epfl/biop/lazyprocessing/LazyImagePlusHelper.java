@@ -13,7 +13,7 @@ import java.util.function.Function;
  *
  */
 
-public class LazyImagePlus extends ImagePlus {
+public class LazyImagePlusHelper extends ImagePlus {
 
         public static ImagePlus create(ImagePlus origin, Function<ImageProcessor, ImageProcessor> imageProcessorFunction, String suffix) {
             LazyVirtualStack vds = new LazyVirtualStack(origin, imageProcessorFunction);

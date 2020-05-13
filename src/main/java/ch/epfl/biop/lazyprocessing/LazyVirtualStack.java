@@ -44,6 +44,10 @@ public class LazyVirtualStack extends VirtualStack {
     }
 
 
+    public void updateFunction(Function<ImageProcessor, ImageProcessor> imageProcessorFunction) {
+        this.imageProcessorFunction = imageProcessorFunction;
+    }
+
     /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
     public Object getPixels(int n) {
         ImageProcessor ip = imageProcessorFunction.apply(origin.getStack().getProcessor(n));

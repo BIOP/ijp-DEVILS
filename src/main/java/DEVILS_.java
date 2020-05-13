@@ -8,7 +8,8 @@ import ch.epfl.biop.DevilParam;
 import fiji.util.gui.GenericDialogPlus;
 
 import ij.IJ;
-import ij.ImageJ;
+//import ij.ImageJ;
+import net.imagej.ImageJ;
 import ij.Prefs;
 import ij.plugin.PlugIn;
 
@@ -142,7 +143,9 @@ public class DEVILS_ implements PlugIn {
 		System.setProperty("plugins.dir", pluginsDir);
 
 		// start ImageJ
-		new ImageJ();
+		final ImageJ ij = new ImageJ();
+		ij.ui().showUI();
+		// new ImageJ();
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");

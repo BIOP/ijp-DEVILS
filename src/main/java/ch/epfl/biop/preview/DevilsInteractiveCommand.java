@@ -21,24 +21,24 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
     ImagePlus origin;
 
     @Parameter(label = "Largest_object_size (in pixel)")
-    int objectSize;
+    int objectSize = 25;
 
     @Parameter(label = "Use Advanced parameters below (you can specify values for each channel, separated by ',')")
-    boolean advancedParam;
+    boolean advancedParam = false;
 
-    @Parameter(label = "Largest_object_size (in pixel)")
+    @Parameter(required = false, label = "Largest_object_size (in pixel)")
     String objectSize_string;
 
     //@Parameter(label = "Maximum (for normalization step)") TODO : ask Romain if this is used ? doesn't look like it
     //String maxNorm_string;
 
-    @Parameter(label = "Minimum (for final conversion step)")
-    String min_final_string;
+    @Parameter(required = false, label = "Minimum (for final conversion step)")
+    String min_final_string = "";
 
-    @Parameter(label = "Maximum (for final conversion step)")
-    String max_final_string;
+    @Parameter(required = false, label = "Maximum (for final conversion step)")
+    String max_final_string = "";
 
-    @Parameter(label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
+    @Parameter(required = false, label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
     String outputBitDepth_string;
 
     DevilParam dp;
@@ -46,8 +46,6 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
     DevilMeasure dm;
 
     ImagePlus liveComputedImage = null;
-
-    int previousBitDepth = -1;
 
     public void run() {
 
@@ -57,20 +55,32 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
 
         Function<ImageProcessor, ImageProcessor> devilsProcessor = (ipr) -> DEVILS.DEVIL_ipr(dp,dm,new int[]{0,0,0,0},ipr);
 
-        if ((liveComputedImage == null)||(previousBitDepth != liveComputedImage.getBitDepth())) {
-            // TODO : restore czt location
+        if ((liveComputedImage == null)||(bitDepthMismatch(liveComputedImage.getBitDepth(), outputBitDepth_string))) {
+            int c = 1;
+            int z = 1;
+            int t = 1;
             if (liveComputedImage != null) {
                 liveComputedImage.close();
+                c = liveComputedImage.getC();
+                t = liveComputedImage.getT();
+                z = liveComputedImage.getZ();
             }
             // Let's initialize the image
             liveComputedImage = LazyImagePlusHelper.create(origin,devilsProcessor, "_DEVILED");
             liveComputedImage.show();
-            previousBitDepth = liveComputedImage.getBitDepth();
+            liveComputedImage.setPosition(c, z, t);
         } else {
             ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
             LazyImagePlusHelper.redraw(liveComputedImage);
         }
 
+    }
+
+    private boolean bitDepthMismatch(int bitDepth, String outputBitDepth_string) {
+        if (outputBitDepth_string.equals("8-bit") && bitDepth!=8) return true;
+        if (outputBitDepth_string.equals("16-bit") && bitDepth!=16) return true;
+        if (outputBitDepth_string.equals("32-bit") && bitDepth!=32) return true;
+        return false;
     }
 
 }

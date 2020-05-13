@@ -23,22 +23,22 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
     @Parameter(label = "Largest_object_size (in pixel)")
     int objectSize = 25;
 
-    @Parameter(label = "Use Advanced parameters below (you can specify values for each channel, separated by ',')")
+    //@Parameter(label = "Use Advanced parameters below (you can specify values for each channel, separated by ',')")
     boolean advancedParam = false;
 
-    @Parameter(required = false, label = "Largest_object_size (in pixel)")
-    String objectSize_string;
+    //@Parameter(required = false, label = "Largest_object_size (in pixel)")
+    String objectSize_string = "";
 
     //@Parameter(label = "Maximum (for normalization step)") TODO : ask Romain if this is used ? doesn't look like it
     //String maxNorm_string;
 
-    @Parameter(required = false, label = "Minimum (for final conversion step)")
+    //@Parameter(required = false, label = "Minimum (for final conversion step)")
     String min_final_string = "";
 
-    @Parameter(required = false, label = "Maximum (for final conversion step)")
+    //@Parameter(required = false, label = "Maximum (for final conversion step)")
     String max_final_string = "";
 
-    @Parameter(required = false, label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
+    //@Parameter(required = false, label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
     String outputBitDepth_string;
 
     DevilParam dp;

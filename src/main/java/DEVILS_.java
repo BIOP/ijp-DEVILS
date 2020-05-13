@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import ij.ImagePlus;
 import ij.plugin.FolderOpener;
@@ -158,7 +159,13 @@ public class DEVILS_ implements PlugIn {
 
 				reordered_impV.show();
 
-				if (new File(dp.getOutputDir() + File.separator + "XmlHdf5").mkdir()) {
+				boolean folderExists = new File(dp.getOutputDir() + File.separator + "XmlHdf5").exists();
+
+				if (!folderExists) {
+					folderExists = new File(dp.getOutputDir() + File.separator + "XmlHdf5").mkdir();
+				}
+
+				if (folderExists) {
 
 					IJ.run("Export Current Image as XML/HDF5", " value_range=[Use values specified below]" +
 							" min=0 max=65535" +
@@ -173,8 +180,8 @@ public class DEVILS_ implements PlugIn {
 				}
 
 			}
-
 			ender_ms = System.currentTimeMillis();
+			ij.IJ.log("---------------------");
 			ij.IJ.log("XmlHdf5 export took : "+ ( (ender_ms - starter_ms) / 1000 )+" sec of your life" );
 		}
 		

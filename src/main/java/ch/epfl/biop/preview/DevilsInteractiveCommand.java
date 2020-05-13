@@ -16,6 +16,8 @@ import org.scijava.command.InteractiveCommand;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.Button;
+
+import javax.swing.*;
 import java.util.function.Function;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BIOP>Image Processing>DEVILS Preview")
@@ -96,7 +98,10 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
         GenericDialogPlus gd = new GenericDialogPlus("DEVILS parameters");
 
         String 	defaultPath 		= Prefs.get("ch.epfl.biop.devil.defaultPath"			, Prefs.getImageJDir());
+        boolean exportAsXmlHdf5     = Prefs.getBoolean("ch.epfl.biop.devil.exportXmlHdf5"	, false);
+
         gd.addFileField("Select_File", defaultPath);
+        gd.addCheckbox("Export_XmlHdf5", exportAsXmlHdf5);
         gd.showDialog();
 
         // if "canceled" send error and return
@@ -105,14 +110,21 @@ public class DevilsInteractiveCommand extends InteractiveCommand {
             return;
         }
 
-        IJ.run("DEVILS ",
-                       " select_file="+gd.getNextString()+
-                       " objectSize="+objectSize+
-                       " advancedParam="+advancedParam+
-                       " objectSize_string=["+objectSize_string+"]"+
-                       " min_final_string=["+min_final_string+"]"+
-                       " max_final_string=["+max_final_string+"]"+
-                       " outputBitDepth_string="+outputBitDepth_string
-                );
+        String params = " select_file="+gd.getNextString();
+        if (gd.getNextBoolean()) params += " export_xmlhdf5";
+        params+= " largest_object_size="+objectSize;
+
+        // TODO : output_directory
+
+        if (advancedParam) params+=" advanced_parameters";
+        params+=" object=["+objectSize_string+"]"+
+                " minimum=["+min_final_string+"]"+
+                " maximum=["+max_final_string+"]"+
+                " output_bit_depth="+outputBitDepth_string+
+                " output_directory=''";
+
+        final String finalParams = params;
+
+        new Thread(() -> IJ.run("DEVILS ",finalParams)).start(); // causes thread lock otherwise ?
     }
 }

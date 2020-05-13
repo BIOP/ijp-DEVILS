@@ -53,7 +53,7 @@ public class DevilParam {
 	 */
 	// input
 	File 	file		;
-	String 	imageName 	;
+	public String 	imageName 	;
 	String 	fileDir_str 	;
 	// output
 	File 	output_dir 	;
@@ -70,13 +70,13 @@ public class DevilParam {
 	transient boolean littleEndian;
 	
 	int nSeries;
-	int nChannel;
-	int nSlice;
-	int nFrame;
+	public int nChannel;
+	public int nSlice;
+	public int nFrame;
 	int perSeriesPlanesNbr ;
 	int totalPlanesNbr ;
 	
-	double[] voxelSize = {1,1,1};
+	public double[] voxelSize = {1,1,1};
 	
 	
 	// initialized after GUI

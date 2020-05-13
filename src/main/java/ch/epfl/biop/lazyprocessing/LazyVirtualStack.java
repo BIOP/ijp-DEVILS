@@ -4,6 +4,8 @@ import ij.ImagePlus;
 import ij.VirtualStack;
 import ij.process.*;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -21,6 +23,8 @@ public class LazyVirtualStack extends VirtualStack {
     Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction;
 
     int resultingBitDepth;
+
+    Map<Integer, ImageProcessor> cachedImageProcessor = new ConcurrentHashMap<>();
 
     public LazyVirtualStack(ImagePlus origin, Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         this.origin = origin;
@@ -42,9 +46,9 @@ public class LazyVirtualStack extends VirtualStack {
         }
     }
 
-
     public void updateFunction(Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         this.imageProcessorFunction = imageProcessorFunction;
+        cachedImageProcessor.clear();
     }
 
     ImagePlus imagePlusLocalizer = null;
@@ -55,13 +59,13 @@ public class LazyVirtualStack extends VirtualStack {
 
     /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
     public Object getPixels(int n) {
-        ImageProcessor ip;
-        if (imagePlusLocalizer==null) {
+        ImageProcessor ip = getProcessor(n);
+        /*if (imagePlusLocalizer==null) {
             ip = imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n)));
         } else {
             // Localize in czt
             ip = imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n)));
-        }
+        }*/
         if (ip!=null)
             return ip.getPixels();
         else
@@ -70,12 +74,15 @@ public class LazyVirtualStack extends VirtualStack {
 
     @Override
     public ImageProcessor getProcessor(int n) {
-        if (imagePlusLocalizer==null) {
-            return imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n)));
-        } else {
-            // Localize in czt
-            return imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n)));
+        if (!cachedImageProcessor.containsKey(n)) {
+            if (imagePlusLocalizer==null) {
+                cachedImageProcessor.put(n, imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n))));
+            } else {
+                // Localize in czt
+                cachedImageProcessor.put(n, imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n))));
+            }
         }
+        return cachedImageProcessor.get(n);
     }
 
     @Override

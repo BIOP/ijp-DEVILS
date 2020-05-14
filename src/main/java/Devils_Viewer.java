@@ -9,9 +9,9 @@ import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
-public class Devils_Viewer {//implements PlugIn{
+public class Devils_Viewer implements PlugIn{
 
-	//@Override
+	@Override
 	public void run(String arg) {
 		
 		DevilsFrame df=new DevilsFrame();

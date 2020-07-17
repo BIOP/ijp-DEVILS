@@ -167,12 +167,15 @@ public class DEVILS_ implements PlugIn {
 
 				if (folderExists) {
 
-					IJ.run("Export Current Image as XML/HDF5", " value_range=[Use values specified below]" +
+					IJ.run("Export Current Image as XML/HDF5",
+							" subsampling_factors=[{ {1,1,1}, {2,2,2}, {4,4,4}, {8,8,8}, {16,16,16} }]"+
+							" hdf5_chunk_sizes=[{ {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16} }]"+
+							" value_range=[Use values specified below]" +
 							" min=0 max=65535" +
 							" timepoints_per_partition=0" +
 							" setups_per_partition=0" +
 							" use_deflate_compression" +
-							" export_path=" + dp.getOutputDir() + File.separator + "XmlHdf5" + File.separator + file_name_filter + ".xml");
+							" export_path=[" + dp.getOutputDir() + File.separator + "XmlHdf5" + File.separator + file_name_filter + ".xml]");
 
 					reordered_impV.close();
 				} else {

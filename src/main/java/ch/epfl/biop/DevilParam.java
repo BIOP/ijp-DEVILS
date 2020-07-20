@@ -212,6 +212,7 @@ public class DevilParam {
 			final IMetadata meta = service.createOMEXMLMetadata();
 			
 			ch_separator.setMetadataStore( meta );
+			ch_separator.setFlattenedResolutions(false);
 			//very important to setId AFTER MetadataStore, otherwise send non null issue ! 
 			ch_separator.setId(defaultPath);
 			this.littleEndian = ch_separator.isLittleEndian();

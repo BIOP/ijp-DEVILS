@@ -167,9 +167,9 @@ public class DEVILS_ implements PlugIn {
 
 				if (folderExists) {
 
-					IJ.run("Export Current Image as XML/HDF5",
-							" subsampling_factors=[{ {1,1,1}, {2,2,2}, {4,4,4}, {8,8,8}, {16,16,16} }]"+
-							" hdf5_chunk_sizes=[{ {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16} }]"+
+					IJ.run("Export Current Image as XML/HDF5 (Devils)",
+							//" subsampling_factors=[{ {1,1,1}, {2,2,2}, {4,4,4}, {8,8,8}, {16,16,16} }]"+
+							//" hdf5_chunk_sizes=[{ {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16} }]"+]
 							" value_range=[Use values specified below]" +
 							" min=0 max=65535" +
 							" timepoints_per_partition=0" +

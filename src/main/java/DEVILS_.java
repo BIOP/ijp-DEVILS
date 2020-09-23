@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import ij.ImagePlus;
 import ij.plugin.FolderOpener;
 import ij.plugin.HyperStackConverter;
+import loci.plugins.LociImporter;
 import org.joda.time.DateTime;
 
 import ch.epfl.biop.DEVILS;
@@ -210,8 +211,10 @@ public class DEVILS_ implements PlugIn {
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
+		new LociImporter().run("");
+
 		// run the plugin
-		IJ.runPlugIn(clazz.getName(), "");
+		//IJ.runPlugIn(clazz.getName(), "");
 		
 	}
 }

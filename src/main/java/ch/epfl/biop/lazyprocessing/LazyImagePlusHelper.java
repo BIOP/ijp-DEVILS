@@ -38,7 +38,7 @@ public class LazyImagePlusHelper extends ImagePlus {
     }
 
         public static void redraw(ImagePlus imp) {
-
+            // System.out.println(imp.getClass().getName());
             // Just try everything...
             imp.updateImage();
             imp.updateAndDraw();
@@ -49,6 +49,8 @@ public class LazyImagePlusHelper extends ImagePlus {
             if (imp instanceof CompositeImage) {
                 CompositeImage cimp = (CompositeImage) imp;
                 cimp.completeReset();
+            } else {
+
             }
 
         }

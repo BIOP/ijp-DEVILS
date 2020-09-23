@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>28.0.0</version>
+		<version>29.2.1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>ch.epfl.biop</groupId>
 	<artifactId>DEVILS_</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 
 	<name>DEVILS</name>
 	<description>DEVILS as an ImageJ 1.x plugin.</description>
@@ -102,12 +102,6 @@
 		<license.licenseName>N/A</license.licenseName>
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<imagej.app.directory>C:/Fiji/</imagej.app.directory>
-
-		<imglib2.version>5.9.0</imglib2.version>
-		<imglib2-ij.version>2.0.0-beta-46</imglib2-ij.version>
-		<bigdataviewer-core.version>9.0.3</bigdataviewer-core.version>
-		<spim_data.version>2.2.4</spim_data.version>
-		<ui-behaviour.version>2.0.1</ui-behaviour.version>
 	</properties>
 
 	<dependencies>
@@ -123,14 +117,17 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer_fiji</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>bio-formats_plugins</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-api</artifactId>
@@ -139,11 +136,12 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-lib</artifactId>
 		</dependency>
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-			<version>2.8.5</version>
         </dependency>
+
         <dependency>
             <groupId>org.scijava</groupId>
             <artifactId>scijava-common</artifactId>

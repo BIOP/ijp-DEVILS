@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ij.plugin.ChannelSplitter;
+import ij.process.LUT;
 import net.imglib2.FinalDimensions;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
@@ -52,9 +54,15 @@ import mpicbg.spim.data.sequence.Channel;
 import mpicbg.spim.data.sequence.FinalVoxelDimensions;
 import mpicbg.spim.data.sequence.TimePoint;
 import mpicbg.spim.data.sequence.TimePoints;
+import spimdata.util.Displaysettings;
 
 /**
  * ImageJ plugin to export the current image to xml/hdf5.
+ *
+ * BIOP : the reason why we duplicated this class is because
+ * - we are putting some position metadata in it (see offsets)
+ * - we are storing some Brightness / Contrast / Color information in it
+ *  - For this, to avoid depending on Bdv Playground, we copied the DisplaySettings class.
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
@@ -68,6 +76,8 @@ public class ExportDevilsHdf5 implements Command
         IJ.run("Confocal Series (2.2MB)");
         new ExportDevilsHdf5().run();
     }
+
+
 
     @Override
     public void run()
@@ -101,6 +111,19 @@ public class ExportDevilsHdf5 implements Command
         final double pw = imp.getCalibration().pixelWidth;
         final double ph = imp.getCalibration().pixelHeight;
         final double pd = imp.getCalibration().pixelDepth;
+
+        /**
+         * Contains the XYZ position of the dataset in the  source AffineTransform3D of the xml/hdf5 dataset, in pixels
+         * Unsupported :
+         * - multiangle datasets (like multiangle CZI)
+         * Ambiguous :
+         * - whether the positions defines the central position of the tile or the top right corner of the tile is not precised using the Bio-Formats API
+         * but here, the coordinate given should be the top left corner.
+         */
+        final double xOffset = imp.getCalibration().xOrigin*pw;
+        final double yOffset = imp.getCalibration().yOrigin*ph;
+        final double zOffset = imp.getCalibration().zOrigin*pd;
+
         String punit = imp.getCalibration().getUnit();
         if ( punit == null || punit.isEmpty() )
             punit = "px";
@@ -142,16 +165,35 @@ public class ExportDevilsHdf5 implements Command
 
         // create SourceTransform from the images calibration
         final AffineTransform3D sourceTransform = new AffineTransform3D();
-        sourceTransform.set( pw, 0, 0, 0, 0, ph, 0, 0, 0, 0, pd, 0 );
+        sourceTransform.set( pw, 0, 0, xOffset, 0, ph, 0, yOffset, 0, 0, pd, zOffset );
 
         // write hdf5
         final HashMap< Integer, BasicViewSetup > setups = new HashMap<>( numSetups );
+
+        ImagePlus[] impSingleChannel = ChannelSplitter.split(imp);
+
         for ( int s = 0; s < numSetups; ++s )
         {
             final BasicViewSetup setup = new BasicViewSetup( s, String.format( "channel %d", s + 1 ), size, voxelSize );
             setup.setAttribute( new Channel( s + 1 ) );
+
+            Displaysettings ds = new Displaysettings(s+1);
+            ds.min = impSingleChannel[s].getDisplayRangeMin();
+            ds.max = impSingleChannel[s].getDisplayRangeMax();
+            if (imp.getType() == ImagePlus.COLOR_RGB) {
+                ds.isSet = false;
+            } else {
+                ds.isSet = true;
+                LUT lut = impSingleChannel[s].getProcessor().getLut();
+                ds.color = new int[]{lut.getRed(255), lut.getGreen(255), lut.getBlue(255), lut.getAlpha(255)};
+            }
+            setup.setAttribute(ds);
+
             setups.put( s, setup );
         }
+
+        impSingleChannel = null;
+
         final ArrayList< TimePoint > timepoints = new ArrayList<>( numTimepoints );
         for ( int t = 0; t < numTimepoints; ++t )
             timepoints.add( new TimePoint( t ) );
@@ -162,6 +204,7 @@ public class ExportDevilsHdf5 implements Command
         final ExportMipmapInfo mipmapInfo = new ExportMipmapInfo( params.resolutions, params.subdivisions );
         for ( final BasicViewSetup setup : seq.getViewSetupsOrdered() )
             perSetupExportMipmapInfo.put( setup.getId(), mipmapInfo );
+
 
         // LoopBackHeuristic:
         // - If saving more than 8x on pixel reads use the loopback image over

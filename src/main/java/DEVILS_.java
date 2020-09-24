@@ -60,7 +60,7 @@ public class DEVILS_ implements PlugIn {
 		String minFinal_string	= "Default";
 		String maxFinal_string	= "Default";
 		String objectSize_string= String.valueOf(objectSize);
-		Prefs.set("ch.epfl.biop.devil.objectSize"		, objectSize_string		);
+		if (!advancedParam) Prefs.set("ch.epfl.biop.devil.objectSize"		, objectSize_string		);
 		String outputBitDepth_string= "16-bit";
 		String outputDir_string = "";
 		
@@ -87,7 +87,7 @@ public class DEVILS_ implements PlugIn {
 			gd_adParam.addStringField("Object Size (in pixel)"				, objectSize_string	,15	);
 			gd_adParam.addMessage("----------------------------------------------------------------------------------------");
 			gd_adParam.addChoice("Output_bit_depth", outputBitDepthChoice , outputBitDepth_string);
-			gd_adParam.addMessage("*16-bit images will be lighter, but requires conversion\nand thus to specify Min. and Max. values for final conversion ");
+			gd_adParam.addMessage("*16-bit and 8-bit images will be lighter, but requires conversion\nand thus to specify Min. and Max. values for final conversion ");
 			gd_adParam.addMessage("**32-bit images will be heavier, but not need for conversion\nneither to know Min. and Max. values for final conversion");
 			
 			gd_adParam.showDialog();
@@ -144,9 +144,9 @@ public class DEVILS_ implements PlugIn {
 				// and define the name accordingly using
 				String file_name_filter = dp.imageName;
 
-				if (dp.getnSeries() > 1) file_name_filter += "_s" + it;
+				if (dp.getnSeries() > 1) file_name_filter += "_s" + it +"-";
 
-				ImagePlus impV = FolderOpener.open(dp.getOutputDir(), "virtual file=" + file_name_filter);
+				ImagePlus impV = FolderOpener.open(dp.getOutputDir(), "virtual file=[" + file_name_filter + "]");
 
 				// re-order using ch_count and total plane number
 				ImagePlus reordered_impV = HyperStackConverter.toHyperStack(impV, dp.nChannel, dp.nSlice, dp.nFrame, "Composite");
@@ -155,6 +155,14 @@ public class DEVILS_ implements PlugIn {
 				reordered_impV.getCalibration().pixelWidth = dp.voxelSize[0];
 				reordered_impV.getCalibration().pixelHeight = dp.voxelSize[1];
 				reordered_impV.getCalibration().pixelDepth = dp.voxelSize[2];
+
+				if (dp.origins!=null) {
+					if (dp.origins.size()>it) {
+						reordered_impV.getCalibration().xOrigin = (int)(dp.origins.get(it)[0]/dp.voxelSize[0]);
+						reordered_impV.getCalibration().yOrigin = (int)(dp.origins.get(it)[1]/dp.voxelSize[1]);
+						reordered_impV.getCalibration().zOrigin = (int)(dp.origins.get(it)[2]/dp.voxelSize[2]);
+					}
+				}
 
 				reordered_impV.setTitle(file_name_filter);
 

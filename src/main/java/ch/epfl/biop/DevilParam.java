@@ -1,7 +1,9 @@
 package ch.epfl.biop;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import ij.IJ;
@@ -12,17 +14,20 @@ import loci.formats.ChannelSeparator;
 import loci.formats.IFormatWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
-import loci.plugins.util.BFVirtualStack; 
+import loci.plugins.util.BFVirtualStack;
+import ome.units.UNITS;
 import ome.units.quantity.Length;
 import ome.xml.meta.MetadataRetrieve;
 
 public class DevilParam {
-	
-	
+
 	/*
 	 * DEVIL param
 	 * 
 	 * this class is used to store many parameters required during DEVIL processing
+	 *
+	 * TODO : limitation : in a multi series acquisition, the number of channels should be identical
+	 *
 	 * 
 	 */
 	public final float default_maxBlur 		= 65535	;
@@ -46,8 +51,7 @@ public class DevilParam {
 	float[] minFinal  			;
 	float[] maxFinal  			;
 	float[] objectSize_array	;
-	
-	
+
 	/*
 	 * Directories Params
 	 */
@@ -77,11 +81,18 @@ public class DevilParam {
 	int totalPlanesNbr ;
 	
 	public double[] voxelSize = {1,1,1};
-	
+	public List<Double[]> origins = new ArrayList<>();  // One origin per serie
 	
 	// initialized after GUI
 	//public DevilParam(String defaultPath, int objectSize, boolean advancedParam, String max_norm_string, String min_final_string, String max_final_string, String outputBitDepth_string) {
-	public DevilParam(String defaultPath,String outputDir, int objectSize, boolean advancedParam, String min_final_string, String max_final_string, String objectSize_string, String outputBitDepth_string) {
+	public DevilParam(String defaultPath,
+					  String outputDir,
+					  int objectSize,
+					  boolean advancedParam,
+					  String min_final_string,
+					  String max_final_string,
+					  String objectSize_string,
+					  String outputBitDepth_string) {
 				
 		this.defaultPath 		= defaultPath;
 		this.output_dir_str 	= outputDir;
@@ -103,7 +114,13 @@ public class DevilParam {
 	}
 
 	// Constructor for the previewer
-	public DevilParam(ImagePlus imp, int objectSize, boolean advancedParam, String min_final_string, String max_final_string, String objectSize_string, String outputBitDepth_string) {
+	public DevilParam(ImagePlus imp,
+					  int objectSize,
+					  boolean advancedParam,
+					  String min_final_string,
+					  String max_final_string,
+					  String objectSize_string,
+					  String outputBitDepth_string) {
 
 		this.defaultPath 		= "";//defaultPath;
 		this.output_dir_str 	= "";//outputDir;
@@ -170,6 +187,10 @@ public class DevilParam {
 		voxelSize[0] = imp.getCalibration().pixelWidth;
 		voxelSize[1] = imp.getCalibration().pixelHeight;
 		voxelSize[2] = imp.getCalibration().pixelDepth;
+
+		/*origin[0] = imp.getCalibration().pixelWidth*imp.getCalibration().xOrigin;
+		origin[1] = imp.getCalibration().pixelHeight*imp.getCalibration().yOrigin;
+		origin[2] = imp.getCalibration().pixelDepth*imp.getCalibration().zOrigin;*/
 	}
 	
 	/*
@@ -246,26 +267,79 @@ public class DevilParam {
 			final int posX = dimOrder.indexOf( 'X' );
 			Length calX = retrieve.getPixelsPhysicalSizeX( 0 );
 			if ( posX >= 0 && calX != null && calX.value().doubleValue() != 0 )
-				voxelSize[0] = calX.value().doubleValue();
+				voxelSize[0] = calX.value(UNITS.MICROMETER).doubleValue();
 			
 			final int posY = dimOrder.indexOf( 'Y' );
 			Length calY = retrieve.getPixelsPhysicalSizeY( 0 );
 			if ( posY >= 0 && calY != null && calY.value().doubleValue() != 0 )
-				voxelSize[1] = calY.value().doubleValue();
+				voxelSize[1] = calY.value(UNITS.MICROMETER).doubleValue();
 			
 			final int posZ = dimOrder.indexOf( 'Z' );
 			Length calZ = retrieve.getPixelsPhysicalSizeZ( 0 );
 			if ( posZ >= 0 && calZ != null && calZ.value().doubleValue() != 0 )
-				voxelSize[2] = calZ.value().doubleValue();
+				voxelSize[2] = calZ.value(UNITS.MICROMETER).doubleValue();
 			//String voxel_depth = new Double(voxelSize[2]).toString(); 
 	   		//ij.IJ.log(" voxel_depth : "+voxel_depth);
-		
+
+			origins = new ArrayList<>();
+
+			for (int iSerie = 0; iSerie<nSeries; iSerie++) {
+				Double[] originSerie = new Double[3];
+				Length[] pos = getSeriesPositionAsLengths((IMetadata) (ch_separator.getMetadataStore()), iSerie);
+				if (pos[0].value(UNITS.MICROMETER)!=null) {
+					originSerie[0] = pos[0].value(UNITS.MICROMETER).doubleValue();
+				} else
+					originSerie[0] = new Double(0);
+				if (pos[1].value(UNITS.MICROMETER)!=null) {
+					originSerie[1] = pos[1].value(UNITS.MICROMETER).doubleValue();
+				} else
+					originSerie[1] = new Double(0);
+				if (pos[2].value(UNITS.MICROMETER)!=null) {
+					originSerie[2] = pos[2].value(UNITS.MICROMETER).doubleValue();
+				} else
+					originSerie[2] = new Double(0);
+				origins.add(originSerie);
+			}
+
     	} catch (Exception e) {
 			e.printStackTrace();
     	}
 	}
-	
-	
+
+
+	public static Length[] getSeriesPositionAsLengths(IMetadata omeMeta, int iSerie) {
+		Length[] pos = new Length[3];
+		try {
+			if (omeMeta.getPlanePositionX(iSerie, 0)!=null) {
+				pos[0] = omeMeta.getPlanePositionX(iSerie, 0);
+			} else {
+				pos[0] = new Length(0, UNITS.REFERENCEFRAME);
+			}
+
+			if (omeMeta.getPlanePositionY(iSerie, 0)!=null) {
+				pos[1] = omeMeta.getPlanePositionY(iSerie, 0);
+			} else {
+				pos[1] = new Length(0,UNITS.REFERENCEFRAME);
+			}
+
+			if (omeMeta.getPlanePositionZ(iSerie, 0)!=null) {
+				pos[2] = omeMeta.getPlanePositionZ(iSerie, 0);
+			} else {
+				pos[2] = new Length(0,UNITS.REFERENCEFRAME);
+			}} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("Could not access omeMeta.getPlanePosition");
+			pos[0] = new Length(0,UNITS.REFERENCEFRAME);
+			pos[1] = new Length(0,UNITS.REFERENCEFRAME);
+			pos[2] = new Length(0,UNITS.REFERENCEFRAME);
+		}
+		System.out.println("Ch Name="+omeMeta.getChannelName(iSerie,0));
+		System.out.println("pos[0]="+pos[0].value()+" "+pos[0].unit().getSymbol());
+		System.out.println("pos[1]="+pos[1].value()+" "+pos[1].unit().getSymbol());
+		System.out.println("pos[2]="+pos[2].value()+" "+pos[2].unit().getSymbol());
+
+		return pos;
+	}
 
 	public void setCurrentSeries(int iSeries) {
 		// TODO Auto-generated method stub

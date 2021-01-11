@@ -19,34 +19,34 @@ import org.scijava.widget.Button;
 
 import java.util.function.Function;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BIOP>Image Processing>DEVILS Preview")
-public class DevilsInteractiveCommand extends InteractiveCommand {
+@Plugin(type = Command.class, menuPath = "Plugins>BIOP>Image Processing>DEVILS Preview ( Advanced )")
+public class DevilsInteractiveAdvancedCommand extends InteractiveCommand {
 
     @Parameter
     ImagePlus origin;
 
-    @Parameter(label = "Largest_object_size (in pixel)")
-    int objectSize = 25;
+    //@Parameter(label = "Largest_object_size (in pixel)")
+    int objectSize = 0;
 
-    @Parameter(label = "Use Advanced parameters below (you can specify values for each channel, separated by ',')")
-    boolean advancedParam = false;
+    //@Parameter(label = "Use Advanced parameters below (you can specify values for each channel, separated by ',')")
+    boolean advancedParam = true;
 
-    @Parameter(required = false, label = "Largest_object_size (in pixel)")
+    @Parameter(required = false, label = "Largest_object_size (in pixel), specify values for each channel, separated by ','")
     String objectSize_string = "";
 
     //@Parameter(label = "Maximum (for normalization step)") TODO : ask Romain if this is used ? doesn't look like it
     //String maxNorm_string;
 
-    @Parameter(required = false, label = "Minimum (for final conversion step)")
+    @Parameter(required = false, label = "Minimum (for final conversion step), specify values for each channel, separated by ','")
     String min_final_string = "";
 
-    @Parameter(required = false, label = "Maximum (for final conversion step)")
+    @Parameter(required = false, label = "Maximum (for final conversion step), specify values for each channel, separated by ','")
     String max_final_string = "";
 
     @Parameter(required = false, label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
-    String outputBitDepth_string;
+    String outputBitDepth_string = "16-bit";
 
-    @Parameter(label = "Start DEVILS with the current parameters", callback = "doProcess", persist = false)
+    @Parameter(label = "Start DEVILS with the current parameter", callback = "doProcess", persist = false)
     Button button;
 
     DevilParam dp;

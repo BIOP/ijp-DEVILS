@@ -1,6 +1,12 @@
 
 import java.io.IOException;
 
+import java.io.File;
+
+import ij.ImagePlus;
+import ij.plugin.FolderOpener;
+import ij.plugin.HyperStackConverter;
+import loci.plugins.LociImporter;
 import org.joda.time.DateTime;
 
 import ch.epfl.biop.DEVILS;
@@ -8,13 +14,11 @@ import ch.epfl.biop.DevilParam;
 import fiji.util.gui.GenericDialogPlus;
 
 import ij.IJ;
-import ij.ImageJ;
+import net.imagej.ImageJ;
 import ij.Prefs;
 import ij.plugin.PlugIn;
 
 import loci.formats.FormatException;
-
-// here is the User Interface that runs the class DEVIL.java
 
 public class DEVILS_ implements PlugIn {
 
@@ -23,12 +27,15 @@ public class DEVILS_ implements PlugIn {
 		String 	defaultPath 		= Prefs.get("ch.epfl.biop.devil.defaultPath"			, Prefs.getImageJDir());
 		int 	objectSize 			= Prefs.getInt("ch.epfl.biop.devil.particle_size"		, 25 );
 		boolean	advancedParam 		= Prefs.getBoolean("ch.epfl.biop.devil.advancedParam"	, false);
-				
+		boolean exportAsXmlHdf5     = Prefs.getBoolean("ch.epfl.biop.devil.exportXmlHdf5"	, false);
+
 		GenericDialogPlus gd = new GenericDialogPlus("DEVILS parameters");
-		
-		gd.addFileField("Select File", defaultPath);
-		gd.addNumericField("Largest object_size (in pixel)", objectSize, 0);
-		gd.addCheckbox("Advanced parameters", advancedParam);
+
+		gd.addFileField("Select_File", defaultPath);
+		gd.addNumericField("Largest_object_size (in pixel)", objectSize, 0);
+		gd.addCheckbox("Export_XmlHdf5", exportAsXmlHdf5);
+		gd.addCheckbox("Advanced_parameters", advancedParam);
+
 		gd.showDialog();
 		
 		// if "canceled" send error and return
@@ -39,18 +46,20 @@ public class DEVILS_ implements PlugIn {
 		// otherwise, retrieve values
 		defaultPath 		= 		gd.getNextString();
 		objectSize 			= (int) gd.getNextNumber();
+		exportAsXmlHdf5     =	    gd.getNextBoolean();
 		advancedParam		= 		gd.getNextBoolean();
 		
 		// set choices in Prefs		
 		Prefs.set("ch.epfl.biop.devil.defaultPath"		, defaultPath);
 		Prefs.set("ch.epfl.biop.devil.particle_size"	, objectSize );
+		Prefs.set("ch.epfl.biop.devil.exportXmlHdf5"	, advancedParam );
 		Prefs.set("ch.epfl.biop.devil.advancedParam"	, advancedParam );
 		
 		//String maxNorm_string	= "Default";
 		String minFinal_string	= "Default";
 		String maxFinal_string	= "Default";
 		String objectSize_string= String.valueOf(objectSize);
-		Prefs.set("ch.epfl.biop.devil.objectSize"		, objectSize_string		);
+		if (!advancedParam) Prefs.set("ch.epfl.biop.devil.objectSize"		, objectSize_string		);
 		String outputBitDepth_string= "16-bit";
 		String outputDir_string = "";
 		
@@ -62,8 +71,8 @@ public class DEVILS_ implements PlugIn {
 			objectSize_string		= Prefs.get("ch.epfl.biop.devil.objectSize"			, "10, 10, ..." 		);
 			outputBitDepth_string 	= Prefs.get("ch.epfl.biop.devil.outputBitDepth"		, "16-bit" 				);
 			outputDir_string		= Prefs.get("ch.epfl.biop.devil.outputDir"			, "" 					);
-			
-			String[] outputBitDepthChoice = {"16-bit","32-bit"};
+
+			String[] outputBitDepthChoice = {"8-bit","16-bit","32-bit"};
 			
 			GenericDialogPlus gd_adParam = new GenericDialogPlus("DEVILS advanced parameters");
 			gd_adParam.addMessage("You can specify an ouput directory.\n(Leave the field empty to create a DEVILS subfolder)");
@@ -77,7 +86,8 @@ public class DEVILS_ implements PlugIn {
 			gd_adParam.addStringField("Object Size (in pixel)"				, objectSize_string	,15	);
 			gd_adParam.addMessage("----------------------------------------------------------------------------------------");
 			gd_adParam.addChoice("Output_bit_depth", outputBitDepthChoice , outputBitDepth_string);
-			gd_adParam.addMessage("*16-bit images will be lighter, but requires conversion\nand thus to specify Min. and Max. values for final conversion ");
+			gd_adParam.addMessage("*16-bit and 8-bit images will be lighter, but requires conversion\nand thus to specify Min. and Max. values for final conversion ");
+
 			gd_adParam.addMessage("**32-bit images will be heavier, but not need for conversion\nneither to know Min. and Max. values for final conversion");
 			
 			gd_adParam.showDialog();
@@ -111,17 +121,80 @@ public class DEVILS_ implements PlugIn {
 		
 		try {
 			DEVILS.run(dp);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (FormatException e) {
+		} catch (IOException | FormatException e) {
 			e.printStackTrace();
 		}
-		
+
 		DateTime ender = DateTime.now();
 		ij.IJ.log("Ends at : "+ ender);
 	    long ender_ms = System.currentTimeMillis();
-	    
+
 	    ij.IJ.log("DEVILS consumed : "+ ( (ender_ms - starter_ms) / 1000 )+"sec of your life" );
+
+	    if (exportAsXmlHdf5) {
+			starter_ms = System.currentTimeMillis();
+
+	    	ij.IJ.log("---------------------");
+	    	ij.IJ.log("Exporting as Xml/Hdf5");
+
+			for (int it = 0;it<dp.getnSeries();it++) {
+				// Open the serie as a virtual stack
+
+				// and define the name accordingly using
+				String file_name_filter = dp.imageName;
+
+				if (dp.getnSeries() > 1) file_name_filter += "_s" + it +"-";
+
+				ImagePlus impV = FolderOpener.open(dp.getOutputDir(), "virtual file=[" + file_name_filter + "]");
+
+				// re-order using ch_count and total plane number
+				ImagePlus reordered_impV = HyperStackConverter.toHyperStack(impV, dp.nChannel, dp.nSlice, dp.nFrame, "Composite");
+
+				// set calibration
+				reordered_impV.getCalibration().pixelWidth = dp.voxelSize[0];
+				reordered_impV.getCalibration().pixelHeight = dp.voxelSize[1];
+				reordered_impV.getCalibration().pixelDepth = dp.voxelSize[2];
+
+				if (dp.origins!=null) {
+					if (dp.origins.size()>it) {
+						reordered_impV.getCalibration().xOrigin = (int)(dp.origins.get(it)[0]/dp.voxelSize[0]);
+						reordered_impV.getCalibration().yOrigin = (int)(dp.origins.get(it)[1]/dp.voxelSize[1]);
+						reordered_impV.getCalibration().zOrigin = (int)(dp.origins.get(it)[2]/dp.voxelSize[2]);
+					}
+				}
+
+				reordered_impV.setTitle(file_name_filter);
+
+				reordered_impV.show();
+
+				boolean folderExists = new File(dp.getOutputDir() + File.separator + "XmlHdf5").exists();
+
+				if (!folderExists) {
+					folderExists = new File(dp.getOutputDir() + File.separator + "XmlHdf5").mkdir();
+				}
+
+				if (folderExists) {
+
+					IJ.run("Export Current Image as XML/HDF5 (Devils)",
+							//" subsampling_factors=[{ {1,1,1}, {2,2,2}, {4,4,4}, {8,8,8}, {16,16,16} }]"+
+							//" hdf5_chunk_sizes=[{ {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16}, {16,16,16} }]"+]
+							" value_range=[Use values specified below]" +
+							" min=0 max=65535" +
+							" timepoints_per_partition=0" +
+							" setups_per_partition=0" +
+							" use_deflate_compression" +
+							" export_path=[" + dp.getOutputDir() + File.separator + "XmlHdf5" + File.separator + file_name_filter + ".xml]");
+
+					reordered_impV.close();
+				} else {
+					System.err.println("Err : Could not create folder "+dp.getOutputDir() + File.separator + "XmlHdf5");
+				}
+
+			}
+			ender_ms = System.currentTimeMillis();
+			ij.IJ.log("---------------------");
+			ij.IJ.log("XmlHdf5 export took : "+ ( (ender_ms - starter_ms) / 1000 )+" sec of your life" );
+		}
 		
 	}
 	
@@ -146,6 +219,11 @@ public class DEVILS_ implements PlugIn {
 
 		// run the plugin
 		IJ.runPlugIn(clazz.getName(), "");
+
+		final ImageJ ij = new ImageJ();
+		ij.ui().showUI();
+
+		new LociImporter().run("");
 		
 	}
 }

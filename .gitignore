@@ -1,5 +1,14 @@
 /.classpath
 /.project
 /.settings/
+<<<<<<< HEAD
 /target/
 *.iml
+=======
+/.idea/
+.idea
+.idea/
+*.iml
+*.xml
+/target/
+>>>>>>> publiversion2

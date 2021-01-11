@@ -1,6 +1,8 @@
 package ch.epfl.biop;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DevilMeasure {
 	
@@ -106,7 +108,9 @@ public class DevilMeasure {
 	
 	
 	public void logMeasure(){
-		ij.IJ.log("--------------------------------------------------------");
+
+		String measureMessage = "--------------------------------------------------------\n";
+
        	for  (int i=0 ; i < this.nChannel ; i++){
        		/*
        		double maxOfChannel_d	= getMaxNormOfChannel( i );
@@ -114,15 +118,28 @@ public class DevilMeasure {
        		ij.IJ.log("Channel"+(i+1)+" : maximum value of blurred image:"+maxOfChannel_str);
        		*/
        		double minFinal_d	= getMinFinalOfChannel( i );
-        	String minFinal_str = new Double(minFinal_d).toString(); 
-       		ij.IJ.log("Channel"+(i+1)+" : minimum value of final :"+minFinal_str);
+
+        	String minFinal_str = new Double(minFinal_d).toString();
+			measureMessage +=("Channel"+(i+1)+" : minimum value of final :"+minFinal_str)+"\n";
        		
        		double maxFinal_d	= getMaxFinalOfChannel( i );
-        	String maxFinal_str = new Double(maxFinal_d).toString(); 
-       		ij.IJ.log("Channel"+(i+1)+" : maximum value of final:"+maxFinal_str);
-       		ij.IJ.log("--------------------------------------------------------");
+        	String maxFinal_str = new Double(maxFinal_d).toString();
+			measureMessage +=("Channel"+(i+1)+" : maximum value of final:"+maxFinal_str)+"\n";
+			measureMessage +=("--------------------------------------------------------")+"\n";
      	}
-	}	
+
+		ij.IJ.log(measureMessage);
+
+	}
+
+	public Map<String, Double> getLogMeasureAsMap() {
+		Map<String, Double> minMaxRes = new HashMap<>();
+		for  (int i=0 ; i < this.nChannel ; i++){
+			minMaxRes.put("channel_"+(i+1)+"_min",  getMinFinalOfChannel( i ));
+			minMaxRes.put("channel_"+(i+1)+"_max",  getMaxFinalOfChannel( i ));
+		}
+		return minMaxRes;
+	}
 	
 /*
  *  

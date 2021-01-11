@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="DEVILS_" />
+        <module name="ijp-DEVILS" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="DEVILS_" target="1.8" />
+      <module name="ijp-DEVILS" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

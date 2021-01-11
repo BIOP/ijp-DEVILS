@@ -1,8 +1,12 @@
 package ch.epfl.biop;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.gson.Gson;
 import ij.ImagePlus ;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -99,8 +103,14 @@ public class DEVILS {
 			// convert to 16-bit
 			ImageProcessor ipr_corr_16 = ipr_ori_32.convertToShort(true);
 			// return DEVILed ipr
-			return ipr_corr_16;			
-		} else { 
+			return ipr_corr_16;
+		} else if ( dp.getOutputBitDepth().equals("8-bit") ) {
+			// set min and max to the defined values
+			ipr_ori_32.setMinAndMax(min_final, max_final);
+			// convert to 8-bit
+			ImageProcessor ipr_corr_8 = ipr_ori_32.convertToByte(true);
+			return ipr_corr_8;
+		} else {
 			return ipr_ori_32;
 		}
 	}
@@ -116,6 +126,7 @@ public class DEVILS {
 	 */
 	
 	private final static int n_cpus=Runtime.getRuntime().availableProcessors();
+	public static final String Devils_Parameter_Filename = "DevilsParameters.json";
 	
 	
 	/*
@@ -213,8 +224,18 @@ public class DEVILS {
        	// DO IT ! 
        	startAndJoin(threads);  
         }
-       	// Final Log print with measured value 
-       	dm.logMeasure();
+
+		dm.logMeasure();
+		// Store Devils Parameters as json file
+
+		// Final Log print with measured value
+		dp.devilsMeasureLog = dm.getLogMeasureAsMap(); // Fetch extra info after the processing is done
+
+		Gson gson = new Gson();
+		String outputString = gson.toJson(dp);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(dp.getOutputDir() + File.separator + Devils_Parameter_Filename));
+		writer.write(outputString);
+		writer.close();
             	
 	} 
 	

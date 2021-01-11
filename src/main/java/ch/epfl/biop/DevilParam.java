@@ -11,7 +11,6 @@ import ij.IJ;
 import ij.ImagePlus;
 import loci.common.services.ServiceFactory;
 import loci.formats.ChannelSeparator;
-import loci.formats.IFormatWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
 

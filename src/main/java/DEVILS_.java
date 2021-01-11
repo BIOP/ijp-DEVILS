@@ -215,10 +215,10 @@ public class DEVILS_ implements PlugIn {
 		System.setProperty("plugins.dir", pluginsDir);
 
 		// start ImageJ
-		new ImageJ();
+		//new ImageJ();
 
 		// run the plugin
-		IJ.runPlugIn(clazz.getName(), "");
+		//IJ.runPlugIn(clazz.getName(), "");
 
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();

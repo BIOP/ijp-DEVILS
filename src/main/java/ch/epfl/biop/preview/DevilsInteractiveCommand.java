@@ -17,7 +17,6 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.Button;
 
-import javax.swing.*;
 import java.util.function.Function;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BIOP>Image Processing>DEVILS Preview")

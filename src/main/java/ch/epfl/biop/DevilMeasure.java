@@ -191,10 +191,6 @@ public class DevilMeasure {
        	
 		return max;
 	}
-	
 
-	
-	
-	
 }
 

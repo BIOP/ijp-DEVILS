@@ -1,9 +1,7 @@
 package ch.epfl.biop.preview;
 
-import ch.epfl.biop.DEVILS;
 import ch.epfl.biop.DevilParam;
 import com.google.gson.Gson;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.FolderOpener;
 import ij.plugin.HyperStackConverter;

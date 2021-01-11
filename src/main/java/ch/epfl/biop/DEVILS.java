@@ -165,57 +165,58 @@ public class DEVILS {
 		                // Each thread processes a few items in the total list  
 		                // Each loop iteration within the run method  
 		                // has a unique 'i' number to work with  
-		                // and to use as index in the results array:  
+		                // and to use as index in the results array:
 	                	
-	                	
-	                	for (int i = ai.getAndIncrement(); i < dp.perSeriesPlanesNbr; i = ai.getAndIncrement() ) {  
-	                		
-		                   	int[] 	ZCT_indexes = dp.ch_separator.getZCTCoords(i);
-		                	int 	currentSerie = dp.ch_separator.getSeries();
-		                   	int[]	ZCTS_indexes= { ZCT_indexes[0], ZCT_indexes[1],ZCT_indexes[2],currentSerie };
-		                	int 	totalPlanesNbr = dp.getTotalPlanesNbr();
-		                	// process each plane        					
-	    					// get the imageProcessor at i+1 (because it starts at 1)		                	
-		                					
-							
-			                	ImageProcessor currentPlane_ipr = dp.vStack.getProcessor(i+1);
-			                	
-		         				// and define the name accordingly using 
-		        				String 	currentPlaneIndexes_str 	=  "-t"+ZCTS_indexes[2]+"-z"+ZCTS_indexes[0]+"-c"+ZCTS_indexes[1]+"-i"+i;
-		    					
-		        				// if the file have multiple series , add serie nbr
-		        				if ( dp.getnSeries() > 1 ) currentPlaneIndexes_str 	=  "s"+ZCTS_indexes[3]+"-"+currentPlaneIndexes_str;   					
-		        				
-		        				// process the image processor
-		    					ImageProcessor processed_currentPlane_ipr ;
-		    					if (dp.advancedParam){
-		    						//processed_currentPlane_ipr = DEVIL_ipr(dp,dm,ZCTS_indexes,currentPlane_ipr, max_norm_arrayF[ ZCT_indexes[1] ], min_final_arrayF[ ZCT_indexes[1] ], max_final_arrayF[ ZCT_indexes[1] ] );
-		    						processed_currentPlane_ipr = DEVIL_ipr(dp,dm,ZCTS_indexes,currentPlane_ipr);
-		        					
-		    					}else{
-		    						processed_currentPlane_ipr = DEVIL_ipr(dp,dm,ZCTS_indexes,currentPlane_ipr);
-		    					}
- 		  		
+	                	for (int i = ai.getAndIncrement(); i < dp.perSeriesPlanesNbr; i = ai.getAndIncrement() ) {
+							if (i < dp.perSeriesPlanesNbr) {
+								int[] ZCT_indexes = dp.ch_separator.getZCTCoords(i);
+								int currentSerie = dp.ch_separator.getSeries();
+								int[] ZCTS_indexes = {ZCT_indexes[0], ZCT_indexes[1], ZCT_indexes[2], currentSerie};
+								int totalPlanesNbr = dp.getTotalPlanesNbr();
+								// process each plane
+								// get the imageProcessor at i+1 (because it starts at 1)
+
+
+								ImageProcessor currentPlane_ipr = dp.vStack.getProcessor(i + 1);
+
+								// and define the name accordingly using
+								String currentPlaneIndexes_str = "-t" + ZCTS_indexes[2] + "-z" + ZCTS_indexes[0] + "-c" + ZCTS_indexes[1] + "-i" + i;
+
+								// if the file have multiple series , add serie nbr
+								if (dp.getnSeries() > 1)
+									currentPlaneIndexes_str = "s" + ZCTS_indexes[3] + "-" + currentPlaneIndexes_str;
+
+								// process the image processor
+								ImageProcessor processed_currentPlane_ipr;
+								if (dp.advancedParam) {
+									//processed_currentPlane_ipr = DEVIL_ipr(dp,dm,ZCTS_indexes,currentPlane_ipr, max_norm_arrayF[ ZCT_indexes[1] ], min_final_arrayF[ ZCT_indexes[1] ], max_final_arrayF[ ZCT_indexes[1] ] );
+									processed_currentPlane_ipr = DEVIL_ipr(dp, dm, ZCTS_indexes, currentPlane_ipr);
+
+								} else {
+									processed_currentPlane_ipr = DEVIL_ipr(dp, dm, ZCTS_indexes, currentPlane_ipr);
+								}
+
 								// make ipl from ipr
-		 						ImagePlus currentPlane_ipl_output 	= new ImagePlus(currentPlaneIndexes_str+"--processed"	, processed_currentPlane_ipr);
-		 						
-		 						Calibration cal = new Calibration(currentPlane_ipl_output) ;
-		     					cal.setUnit("micron");
-		     					cal.pixelWidth 	= dp.voxelSize[0];
-		     					cal.pixelHeight	= dp.voxelSize[1];
-		     					cal.pixelDepth	= dp.voxelSize[2]; //as no effect ! 
-		     					currentPlane_ipl_output.setCalibration(cal);
-		     					
-		     					// Output
-		     					String ouput_filePath 	= dp.getOutputPath();
-		     					if (totalPlanesNbr > 1){
-		     						ouput_filePath 	+= "_"+currentPlaneIndexes_str+".tif";
-		     					}
-		     					final FileSaver ipl_fileSaver 	= new FileSaver(currentPlane_ipl_output);
-		     					ipl_fileSaver.saveAsTiff(ouput_filePath);
-		     					
-			               
-	                	}
+								ImagePlus currentPlane_ipl_output = new ImagePlus(currentPlaneIndexes_str + "--processed", processed_currentPlane_ipr);
+
+								Calibration cal = new Calibration(currentPlane_ipl_output);
+								cal.setUnit("micron");
+								cal.pixelWidth = dp.voxelSize[0];
+								cal.pixelHeight = dp.voxelSize[1];
+								cal.pixelDepth = dp.voxelSize[2]; //as no effect !
+								currentPlane_ipl_output.setCalibration(cal);
+
+								// Output
+								String ouput_filePath = dp.getOutputPath();
+								if (totalPlanesNbr > 1) {
+									ouput_filePath += "_" + currentPlaneIndexes_str + ".tif";
+								}
+								final FileSaver ipl_fileSaver = new FileSaver(currentPlane_ipl_output);
+								ipl_fileSaver.saveAsTiff(ouput_filePath);
+
+
+							}
+						}
 	                	
 	                }
 	            };  
@@ -260,7 +261,7 @@ public class DEVILS {
         }  
     }
 
-} // end of public class DEVIL 
+} // end of public class DEVILS
 
 
 

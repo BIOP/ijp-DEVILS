@@ -24,6 +24,8 @@ public class DEVILS {
 	/*
 	 * THE runner(s) on an ImageProcessor , AUTO mode or Advanced mode (defined in DevilParam )
 	 */
+	public static int n_cpus = Runtime.getRuntime().availableProcessors();
+
 	public static ImageProcessor DEVIL_ipr(DevilParam dp, DevilMeasure dm,int[] ZCTS_indexes,ImageProcessor ipr ) {
 		// from DevilParam we retrieve some parameters
 		
@@ -125,7 +127,7 @@ public class DEVILS {
 	 *  
 	 */
 	
-	private final static int n_cpus=Runtime.getRuntime().availableProcessors();
+	//private final static int n_cpus=Runtime.getRuntime().availableProcessors();
 	public static final String Devils_Parameter_Filename = "DevilsParameters.json";
 	
 	

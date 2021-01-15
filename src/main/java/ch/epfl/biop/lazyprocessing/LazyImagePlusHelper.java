@@ -4,7 +4,10 @@ import ij.CompositeImage;
 import ij.ImagePlus;
 import ij.plugin.HyperStackConverter;
 import ij.process.ImageProcessor;
+import ij.process.LUT;
 
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 /**
@@ -18,41 +21,49 @@ public class LazyImagePlusHelper extends ImagePlus {
     public static ImagePlus create(ImagePlus origin, String suffix, Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         LazyVirtualStack vds = new LazyVirtualStack(origin, imageProcessorFunction);
         vds.setImagePlusCZTSLocalizer(origin);
-        ImagePlus impv = new ImagePlus();
-        impv.setStack("", vds);
-        ImagePlus out = HyperStackConverter.toHyperStack(impv, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
+        ImagePlus imp = new ImagePlus();
+        imp.setStack("", vds);
+
+        ImagePlus out = HyperStackConverter.toHyperStack(imp, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
         out.setTitle(origin.getTitle()+suffix);
+        if ((origin.isComposite())&&(out.isComposite())) {
+            ((CompositeImage)out).setLuts(origin.getLuts().clone());
+        }
+        out.setPosition(origin.getC(), origin.getZ(), origin.getT());
         return out;
     }
 
-    public static ImagePlus create(ImagePlus origin, Function<ImageProcessor, ImageProcessor> imageProcessorFunction, String suffix) {
-        Function<LocalizedImageProcessor, ImageProcessor> ipf = (lip) -> imageProcessorFunction.apply(lip.ip);
+    public static void redraw(ImagePlus imp, ImagePlus impOrig) {
 
-        LazyVirtualStack vds = new LazyVirtualStack(origin, ipf);
-        vds.setImagePlusCZTSLocalizer(origin);
-        ImagePlus impv = new ImagePlus();
-        impv.setStack("", vds);
-        ImagePlus out = HyperStackConverter.toHyperStack(impv, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
-        out.setTitle(origin.getTitle()+suffix);
-        return out;
-    }
+        imp.updateImage();
+        imp.updateAndDraw();
+        /*imp.updateAndRepaintWindow();
+        imp.updateChannelAndDraw();
+        imp.updateVirtualSlice();*/
 
-        public static void redraw(ImagePlus imp) {
-            // System.out.println(imp.getClass().getName());
-            // Just try everything...
-            imp.updateImage();
-            imp.updateAndDraw();
-            imp.updateAndRepaintWindow();
-            imp.updateChannelAndDraw();
-            imp.updateVirtualSlice();
+        if (imp instanceof CompositeImage) {
+            CompositeImage cimp = (CompositeImage) imp;
 
-            if (imp instanceof CompositeImage) {
-                CompositeImage cimp = (CompositeImage) imp;
-                cimp.completeReset();
-            } else {
+            double[] min = new double[cimp.getNChannels()];
+            double[] max = new double[cimp.getNChannels()];
 
+            for (int i=0;i<cimp.getNChannels();i++) {
+                min[i] = cimp.getChannelLut(i+1).min;
+                max[i] = cimp.getChannelLut(i+1).max;
             }
 
+            cimp.setChannelsUpdated();
+
+            LUT[] copied = impOrig.getLuts().clone();
+
+            for (int i=0;i<cimp.getNChannels();i++) {
+                copied[i].min = min[i];
+                copied[i].max = max[i];
+            }
+            ((CompositeImage)imp).setLuts(copied);
+
         }
+
+    }
 
 }

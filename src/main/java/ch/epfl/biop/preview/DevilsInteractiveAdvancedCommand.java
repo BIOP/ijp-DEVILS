@@ -81,7 +81,7 @@ public class DevilsInteractiveAdvancedCommand extends InteractiveCommand {
             liveComputedImage.setPosition(c, z, t);
         } else {
             ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
-            LazyImagePlusHelper.redraw(liveComputedImage);
+            LazyImagePlusHelper.redraw(liveComputedImage, origin);
         }
 
     }

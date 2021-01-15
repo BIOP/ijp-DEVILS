@@ -44,9 +44,10 @@ public class LazyVirtualStack extends VirtualStack {
         } else {
             throw new UnsupportedOperationException("Unknown resulting ImageProcessor");
         }
+        //this.setColorModel(origin.getStack().getColorModel());
     }
 
-    public void updateFunction(Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
+    public synchronized void updateFunction(Function<LocalizedImageProcessor, ImageProcessor> imageProcessorFunction) {
         this.imageProcessorFunction = imageProcessorFunction;
         cachedImageProcessor.clear();
     }
@@ -67,15 +68,16 @@ public class LazyVirtualStack extends VirtualStack {
     }
 
     @Override
-    public ImageProcessor getProcessor(int n) {
-        if (!cachedImageProcessor.containsKey(n)) {
-            if (imagePlusLocalizer==null) {
-                cachedImageProcessor.put(n, imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n))));
-            } else {
-                // Localize in czt
-                cachedImageProcessor.put(n, imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n))));
-            }
+    public synchronized ImageProcessor getProcessor(int n) {
+        //if (!cachedImageProcessor.containsKey(n)) {
+        if (imagePlusLocalizer==null) {
+            cachedImageProcessor.put(n, imageProcessorFunction.apply(LocalizedImageProcessor.wrap(origin.getStack().getProcessor(n))));
+        } else {
+            // Localize in czt
+            cachedImageProcessor.put(n, imageProcessorFunction.apply(new LocalizedImageProcessor(origin.getStack().getProcessor(n), imagePlusLocalizer.convertIndexToPosition(n))));
         }
+        //}
+        cachedImageProcessor.get(n).setColorModel(origin.getStack().getProcessor(n).getColorModel());
         return cachedImageProcessor.get(n);
     }
 

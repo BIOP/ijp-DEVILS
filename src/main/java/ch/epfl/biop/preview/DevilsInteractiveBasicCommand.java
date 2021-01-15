@@ -7,6 +7,7 @@ import ch.epfl.biop.lazyprocessing.LazyImagePlusHelper;
 import ch.epfl.biop.lazyprocessing.LazyVirtualStack;
 import ch.epfl.biop.lazyprocessing.LocalizedImageProcessor;
 import fiji.util.gui.GenericDialogPlus;
+import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -81,7 +82,7 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
             liveComputedImage.setPosition(c, z, t);
         } else {
             ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
-            LazyImagePlusHelper.redraw(liveComputedImage);
+            LazyImagePlusHelper.redraw(liveComputedImage, origin);
         }
 
     }

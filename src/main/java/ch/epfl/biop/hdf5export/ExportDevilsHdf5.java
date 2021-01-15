@@ -187,7 +187,7 @@ public class ExportDevilsHdf5 implements Command
                 LUT lut = impSingleChannel[s].getProcessor().getLut();
                 ds.color = new int[]{lut.getRed(255), lut.getGreen(255), lut.getBlue(255), lut.getAlpha(255)};
             }
-            setup.setAttribute(ds);
+            //setup.setAttribute(ds);
 
             setups.put( s, setup );
         }

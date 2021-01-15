@@ -2,6 +2,7 @@ package ch.epfl.biop.lazyprocessing;
 
 import ij.CompositeImage;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.plugin.HyperStackConverter;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
@@ -24,7 +25,14 @@ public class LazyImagePlusHelper extends ImagePlus {
         ImagePlus imp = new ImagePlus();
         imp.setStack("", vds);
 
-        ImagePlus out = HyperStackConverter.toHyperStack(imp, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
+        ImagePlus out = null;
+        if (origin.getNChannels()*origin.getNSlices()*origin.getNFrames() == 1) {
+            out = imp;
+            ImageStack is;
+        } else {
+            out = HyperStackConverter.toHyperStack(imp, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
+        }
+
         out.setTitle(origin.getTitle()+suffix);
         if ((origin.isComposite())&&(out.isComposite())) {
             ((CompositeImage)out).setLuts(origin.getLuts().clone());
@@ -37,9 +45,9 @@ public class LazyImagePlusHelper extends ImagePlus {
 
         imp.updateImage();
         imp.updateAndDraw();
-        /*imp.updateAndRepaintWindow();
+        imp.updateAndRepaintWindow();
         imp.updateChannelAndDraw();
-        imp.updateVirtualSlice();*/
+        imp.updateVirtualSlice();
 
         if (imp instanceof CompositeImage) {
             CompositeImage cimp = (CompositeImage) imp;

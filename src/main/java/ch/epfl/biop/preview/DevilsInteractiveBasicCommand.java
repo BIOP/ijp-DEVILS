@@ -81,8 +81,18 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
             liveComputedImage.show();
             liveComputedImage.setPosition(c, z, t);
         } else {
-            ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
-            LazyImagePlusHelper.redraw(liveComputedImage, origin);
+            if (liveComputedImage.getStack() instanceof LazyVirtualStack) {
+                ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
+                LazyImagePlusHelper.redraw(liveComputedImage, origin);
+            } else {
+                liveComputedImage.hide();
+                liveComputedImage.close();
+                ImageProcessor ip  = devilsProcessor.apply(new LocalizedImageProcessor(origin.getProcessor(), new int[]{1,1,1}));
+                liveComputedImage = new ImagePlus();
+                liveComputedImage.setProcessor(ip);
+                liveComputedImage.setTitle(origin.getTitle()+"_DEVILED");
+                liveComputedImage.show();
+            }
         }
 
     }

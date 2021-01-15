@@ -7,7 +7,7 @@ import org.jdom2.Element;
 import mpicbg.spim.data.SpimDataException;
 import mpicbg.spim.data.generic.base.ViewSetupAttributeIo;
 
-@ViewSetupAttributeIo( name = "displaysettings", type = Displaysettings.class )
+//@ViewSetupAttributeIo( name = "displaysettings", type = Displaysettings.class )
 public class XmlIoDisplaysettings extends XmlIoEntity<Displaysettings>
 {
 

@@ -33,6 +33,7 @@ public class LazyImagePlusHelper extends ImagePlus {
             out = HyperStackConverter.toHyperStack(imp, origin.getNChannels(), origin.getNSlices(), origin.getNFrames());
         }
 
+        out.setDisplayMode(CompositeImage.GRAYSCALE);
         out.setTitle(origin.getTitle()+suffix);
         if ((origin.isComposite())&&(out.isComposite())) {
             ((CompositeImage)out).setLuts(origin.getLuts().clone());

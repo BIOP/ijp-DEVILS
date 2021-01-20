@@ -7,6 +7,7 @@ import ch.epfl.biop.lazyprocessing.LazyImagePlusHelper;
 import ch.epfl.biop.lazyprocessing.LazyVirtualStack;
 import ch.epfl.biop.lazyprocessing.LocalizedImageProcessor;
 import fiji.util.gui.GenericDialogPlus;
+import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -62,7 +63,10 @@ public class DevilsInteractiveAdvancedCommand extends InteractiveCommand {
 
     }
 
+
     public void updatePreview() {
+        IJ.log("Updating preview of image "+origin.getTitle()+" ...");
+
         dp = new DevilParam(origin, objectSize, advancedParam, min_final_string, max_final_string, objectSize_string, outputBitDepth_string);
 
         dm = new DevilMeasure(dp);
@@ -85,10 +89,12 @@ public class DevilsInteractiveAdvancedCommand extends InteractiveCommand {
             liveComputedImage = LazyImagePlusHelper.create(origin,"_DEVILED", devilsProcessor );
             liveComputedImage.show();
             liveComputedImage.setPosition(c, z, t);
+            liveComputedImage.setDisplayMode(IJ.GRAYSCALE);
         } else {
             if (liveComputedImage.getStack() instanceof LazyVirtualStack) {
                 ((LazyVirtualStack) liveComputedImage.getStack()).updateFunction(devilsProcessor);
                 LazyImagePlusHelper.redraw(liveComputedImage, origin);
+                liveComputedImage.setDisplayMode(IJ.GRAYSCALE);
             } else {
                 liveComputedImage.hide();
                 liveComputedImage.close();
@@ -97,8 +103,11 @@ public class DevilsInteractiveAdvancedCommand extends InteractiveCommand {
                 liveComputedImage.setProcessor(ip);
                 liveComputedImage.setTitle(origin.getTitle()+"_DEVILED");
                 liveComputedImage.show();
+                liveComputedImage.setDisplayMode(IJ.GRAYSCALE);
             }
         }
+
+        IJ.log("Preview updated: "+origin.getTitle());
     }
 
     private boolean bitDepthMismatch(int bitDepth, String outputBitDepth_string) {

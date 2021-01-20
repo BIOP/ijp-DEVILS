@@ -4,7 +4,8 @@
 
 This repository is the Fiji implementation of the following publication:
 
-Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A: **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
+*Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
+
 [version 1; peer review: 1 approved with reservations]. F1000Research 2020, 9:1380 (https://doi.org/10.12688/f1000research.25447.1)
 
 Please cite this paper if you make use of DEVILS in your research.
@@ -68,7 +69,7 @@ DEVILS aims to be simple to use in terms of parameters. There are two main Fiji 
 
 ## DEVILS Preview ( Basic )
 This Command works from an opened image. 
-![DEVILS Preview ( Basic )](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-basic-full.png)
+![DEVILS Preview ( Basic )](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-basic-full_2.png)
 When launched, it creates a copy of the active image stack, and displays the effect of DEVILS as you change the "Largest object size" parameter. 
 
 **NOTE** The responsiveness of the Preview mode is highly dependent on the siyze of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
@@ -102,7 +103,7 @@ Selecting this checkbox will bring up the DEVILS advanced parameters window afte
 ## DEVILS Preview ( Advanced )
 
 This option allows you to fix other internal parameters that are set to sensible defaults in the Basic mode. This Command works on the currently open image.
-![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui_2.png)
+![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui.png)
 
 ### Largest object size (in pixel) parameter
 
@@ -123,10 +124,12 @@ This is especially useful when batch processing multiple files, as this ensures 
 
 ## DEVILS Advanced Parameters
 
-This window pops up automatically when you check the **Advanced Parameters** checkbox from the DEVILS Command. 
+This window pops up automatically when you check the **Advanced Parameters** checkbox from the DEVILS Command.
+
 ![DEVILS Main GUI with Advanced Parameters Checked](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-main-gui-advanced-checked.png)
 
 ![DEVILS Advanced parameters GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-advanced-gui.png)
+
 These parameters allow you to fine-tune the output of DEVILS in different ways.
 
 ### Output Directory

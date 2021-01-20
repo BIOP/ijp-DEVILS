@@ -135,6 +135,6 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
 
         final String finalParams = params;
 
-        new Thread(() -> IJ.run("DEVILS ",finalParams)).start(); // causes thread lock otherwise ?
+        new Thread(() -> IJ.run("DEVILS",finalParams)).start(); // causes thread lock otherwise ?
     }
 }

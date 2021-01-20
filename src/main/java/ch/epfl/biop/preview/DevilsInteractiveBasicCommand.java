@@ -47,6 +47,9 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
     //@Parameter(required = false, label = "Output_bit_depth", choices = {"8-bit", "16-bit", "32-bit"})
     String outputBitDepth_string = "16-bit";
 
+    @Parameter(label = "Create or Update Preview", callback = "updatePreview", persist = false)
+    Button buttonUpdatePreview;
+
     @Parameter(label = "Start DEVILS with the current parameter", callback = "doProcess", persist = false)
     Button button;
 
@@ -58,6 +61,9 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
 
     public void run() {
 
+    }
+
+    public void updatePreview() {
         dp = new DevilParam(origin, objectSize, advancedParam, min_final_string, max_final_string, objectSize_string, outputBitDepth_string);
 
         dm = new DevilMeasure(dp);
@@ -94,7 +100,6 @@ public class DevilsInteractiveBasicCommand extends InteractiveCommand {
                 liveComputedImage.show();
             }
         }
-
     }
 
     private boolean bitDepthMismatch(int bitDepth, String outputBitDepth_string) {

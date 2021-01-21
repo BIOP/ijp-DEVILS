@@ -3,9 +3,7 @@
 **Once you summon DEVILS, you cannot quantify your image anymore! This tool is made for visual inspection ONLY!**
 
 This repository is the Fiji implementation of the following publication:
-
-*Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
-
+- *Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
 [version 1; peer review: 1 approved with reservations]. F1000Research 2020, 9:1380 (https://doi.org/10.12688/f1000research.25447.1)
 
 Please cite this paper if you make use of DEVILS in your research.

@@ -2,17 +2,26 @@
 
 **Once you summon DEVILS, you cannot quantify your image anymore! This tool is made for visual inspection ONLY!**
 
-## Publication / Citation
+This repository is the Fiji implementation of the following publication:
 
-If you use DEVILS in your work, please cite the associated article:
+*Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
 
-Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A: **DEVILS: a tool for the visualization of large datasets with a high dynamic range** [version 1; peer review: 1 approved with reservations]. F1000Research 2020, 9:1380 (https://doi.org/10.12688/f1000research.25447.1)
+[version 1; peer review: 1 approved with reservations]. F1000Research 2020, 9:1380 (https://doi.org/10.12688/f1000research.25447.1)
+
+Please cite this paper if you make use of DEVILS in your research.
+
+**Supplemental Data and Examples**
+
+All the data used in the paper can be found on FigShare:
+
+[Data: DEVILS: a tool for the visualization of large datasets with a high dynamic range](https://doi.org/10.6084/m9.figshare.c.5197940.v2)
 
 ## What is DEVILS?
 
 DEVILS is an image processing plugin for Fiji that allows a human to observe features within several magnitudes of intensities.
 
-The plugin works by homogenizing intensities and removing global and local background intensities in order to display high and low intensities in a single shot.
+The plugin works by homogenizing intensities and removing global and local background intensities in order to display high and low intensities without having to constantly chenge the display range of the data.
+
 ### Example Image
 ![Example DEVILS Application](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/top_original_bottom_processed.jpg)
 **Top: Original 3 Channel Image, Bottom : DEVILS result.**
@@ -60,11 +69,10 @@ DEVILS aims to be simple to use in terms of parameters. There are two main Fiji 
 
 ## DEVILS Preview ( Basic )
 This Command works from an opened image. 
-![DEVILS Preview ( Basic )](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-basic-full.png)
+![DEVILS Preview ( Basic )](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-basic-full_2.png)
 When launched, it creates a copy of the active image stack, and displays the effect of DEVILS as you change the "Largest object size" parameter. 
 
-**Warning** The open image must be a stack. It cannot be a single plane. It needs to be at least 2 planes (Channels, Slices or Timepoints). 
-**Warning 2** Currently virtual stacks using this interface do not allow for a consistent brightness and contrast adjustment. This is being looked into. 
+**NOTE** The responsiveness of the Preview mode is highly dependent on the siyze of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
 
 ### Largest object size (in pixel) parameter
 This parameter fixes the internal values of the gaussian blur sigma and the object size for the local background subtraction. It should be set to the size of the largest object in your image (Usually cells, cell nuclei or filaments). In the case of filament-like structures, it would correspond to the largest filament thickness you are interested in.
@@ -95,7 +103,7 @@ Selecting this checkbox will bring up the DEVILS advanced parameters window afte
 ## DEVILS Preview ( Advanced )
 
 This option allows you to fix other internal parameters that are set to sensible defaults in the Basic mode. This Command works on the currently open image.
-![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui_2.png)
+![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui.png)
 
 ### Largest object size (in pixel) parameter
 
@@ -116,10 +124,12 @@ This is especially useful when batch processing multiple files, as this ensures 
 
 ## DEVILS Advanced Parameters
 
-This window pops up automatically when you check the **Advanced Parameters** checkbox from the DEVILS Command. 
+This window pops up automatically when you check the **Advanced Parameters** checkbox from the DEVILS Command.
+
 ![DEVILS Main GUI with Advanced Parameters Checked](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-main-gui-advanced-checked.png)
 
 ![DEVILS Advanced parameters GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-advanced-gui.png)
+
 These parameters allow you to fine-tune the output of DEVILS in different ways.
 
 ### Output Directory
@@ -129,7 +139,7 @@ It can be useful to set it to a different disk in order to maximize the read-wri
 
 ### Minimum (resp Maximum) for final conversion step
 
-See above for a description of these options.
+See [above](#minimum-resp-maximum-for-final-conversion-step) for a description of these options.
 
 ### Output Bit Depth
 

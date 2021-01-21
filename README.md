@@ -20,25 +20,25 @@ All the data used in the paper can be found on FigShare:
 
 DEVILS is an image processing plugin for Fiji that allows a human to observe features within several magnitudes of intensities.
 
-The plugin works by homogenizing intensities and removing global and local background intensities in order to display high and low intensities without having to constantly chenge the display range of the data.
+The plugin works by homogenizing intensities and removing global and local background intensities in order to display high and low intensities without having to constantly change the display range of the data.
 
 ### Example Image
 ![Example DEVILS Application](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/top_original_bottom_processed.jpg)
 **Top: Original 3 Channel Image, Bottom : DEVILS result.**
 *Sample preparation* : Olivier Hagens, LNMC, EPFL 
-*Image acquisition* : Thierry Larroche, BIOP, EPFL 
+*Image acquisition* : Thierry Laroche, BIOP, EPFL 
 *Image enhancement* : Romain Guiet, BIOP, EPFL
 
 ## What does DEVILS mean?
 
-DEVILS stands for **Display Enhancement for Visual Inspection in Large Stacks**. This tool is made for **visual inspection ONLY! NO measurements! NO Quantifications!**
+DEVILS stands for **Display Enhancement for Visual Inspection of Large Stacks**. This tool is made for **visual inspection ONLY! NO measurements! NO quantifications!**
 
 ## Under the Hood
 
 DEVILS is a Fiji plugin which uses a combination of three plugins/functions:
 -   Division by a Gaussian blurred version of the image
--   Per Pixel square root calculation
--   [Rolling Ball Background Subtraction](https://imagej.net/Rolling_Ball_Background_Subtraction)
+-   Per pixel square root calculation
+-   [Rolling ball background subtraction](https://imagej.net/Rolling_Ball_Background_Subtraction)
 
 These operations themselves are rather straightforward. However, DEVILS brings with it the advantage of parallel processing the input image plane by plane in order to gain time when working with large datasets, such as those coming from SPIM.
 
@@ -52,9 +52,9 @@ DEVILS is a part of the PTBIOP [Update Site](https://imagej.net/Update_Sites).
 Using Fiji, you can install it directy by going to:
 `Help > Update... > Manage Update Sites`
 Scroll down until you find `PTBIOP` and check the box on the left.
-Close the Updater windows and restart Fiji.
+Close the updater windows and restart Fiji.
 
-All DEVILS Commands are accessible from `Plugins > BIOP > Image Processing`
+All DEVILS commands are accessible from `Plugins > BIOP > Image Processing`
 
 ## Manual Installation
 
@@ -62,20 +62,23 @@ Because DEVILS depends on a particular ecosystem of plugins, we do not offer a f
 
 # GUI & Parameters
 
-DEVILS aims to be simple to use in terms of parameters. There are two main Fiji Commands for DEVILS: a **Preview Command**, which works on the currently open image, and the main **DEVILS Command** that works from a file on disk. 
-![Accessing the DEVILS Commands](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-menu-access.png)These commands are further split into a basic mode and an advanced mode.
+DEVILS aims to be simple to use in terms of parameters. There are two main Fiji commands for DEVILS: a **Preview Command**, which works on the currently open image, and the main **DEVILS Command** that works from a file on disk. 
+![Accessing the DEVILS Commands](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-menu-access.png) These commands are further split into a basic mode and an advanced mode.
 
 # Basic Mode
 
 ## DEVILS Preview ( Basic )
-This Command works from an opened image. 
+This preview command works from an opened image. 
 ![DEVILS Preview ( Basic )](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-basic-full_2.png)
-When launched, it creates a copy of the active image stack, and displays the effect of DEVILS as you change the "Largest object size" parameter. 
+When launched, it creates a (virtual) copy of the active image stack, and displays the effect of DEVILS as you change the "Largest object size" parameter and press the "Create or Update Preview" button. 
 
-**NOTE** The responsiveness of the Preview mode is highly dependent on the siyze of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
+**NOTE** The responsiveness of the Preview mode is highly dependent on the size of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
 
 ### Largest object size (in pixel) parameter
 This parameter fixes the internal values of the gaussian blur sigma and the object size for the local background subtraction. It should be set to the size of the largest object in your image (Usually cells, cell nuclei or filaments). In the case of filament-like structures, it would correspond to the largest filament thickness you are interested in.
+
+### Start DEVILS with the current parameter
+This button starts the basic DEVILS interface (see below), with the current value of "Largest object size (in pixel)".  
 
 ## DEVILS Interface
 
@@ -83,7 +86,7 @@ This parameter fixes the internal values of the gaussian blur sigma and the obje
 
 ### Select File
 
-As DEVILS is intended for large images, this Command does not work with an image currently open in Fiji, but rather will use BioFormats to open the image and process it plane by plane, ideally never having to load the entire dataset into the RAM of the PC.
+As DEVILS is intended for large images, this command does not work with an image currently opened in Fiji, but rather will use BioFormats to open a potential large image and process it plane by plane, ideally never having to load the entire dataset into the RAM of the PC.
 
 ### Largest object size (in pixel)
 
@@ -92,28 +95,34 @@ This parameter fixes the internal values of the gaussian blur sigma and the obje
 ## Optional Parameters
 ### Export to XML Hdf5
 
-Use this option in order to generate a pyramidal HDF5 File compatible with [BigDataViewer](https://imagej.net/BigDataViewer). This is useful for subsequent visualization and processing in the case your data is very large, and especially relevant if your input data is already pyramidal. 
+Use this option in order to generate a pyramidal HDF5 File compatible with [BigDataViewer](https://imagej.net/BigDataViewer). This is useful for subsequent visualization and processing in case your data is very large. 
 
 ### Advanced Parameters
 
-Selecting this checkbox will bring up the DEVILS advanced parameters window after you click OK.
+Selecting this checkbox will bring up the DEVILS advanced parameters window after you click OK (see below).
 
 # Advanced Mode
 
 ## DEVILS Preview ( Advanced )
-
-This option allows you to fix other internal parameters that are set to sensible defaults in the Basic mode. This Command works on the currently open image.
+The preview command works on the currently open image.
+The advanced preview allows you to specify different parameters for each image channel, as well as other internal parameters that are otherwise set to sensible defaults in the Basic mode.
 ![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui.png)
+When launched, it creates a (virtual) copy of the active image stack, and displays the effect of DEVILS as you change the parameters and press the "Create or Update Preview" button.
+
+**NOTE** The responsiveness of the Preview mode is highly dependent on the size of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
 
 ### Largest object size (in pixel) parameter
 
-Same as before, except you can now define a largest object size for each channel in your image and separating them with commas. You must specify the same number of values as there are channels. 
+Same as in basic mode, except you can now define a largest object size for each channel in your image by separating them with commas. You must specify the same number of values as there are channels. 
 
 ### Minimum (resp Maximum) for final conversion step
 
 Because DEVILS modifies the intensity values though the Gaussian division, square root and background subtraction, the final DEVILS image will have an arbitrary intensity range. In order to rescale this range linearly to an 8-bit or 16-bit  output, values must be chosen for the minimum intensity (which will correspond to 0 intensity afterwards, anything below will be clipped to 0) and the maximum (which will correspond to 255 intensity or 65535 intensity for 8-bit and 16-bit respectively, anything above will be clipped).
-You can select the values for each channel independently and the number of parameters must be identical to the number of channels in your image. 
-In basic mode, the minimum and maximum values are hard-set to -100 and 10'000 for the minimum and maximum of each channel. 
+You need to select the values for each channel independently and the number of parameters must be identical to the number of channels in your image. 
+In basic mode, the minimum and maximum values are hard-set to -100 and 10'000 for each channel. 
+
+### Start DEVILS with the current parameter
+This button starts the advanced DEVILS interface (see below) with the current parameter values. If you start the advanced DEVILS interface from the preview, the pre-filled parameters will not show up in the advanced interface.
 
 ## How to choose the advanced parameters
 
@@ -135,7 +144,7 @@ These parameters allow you to fine-tune the output of DEVILS in different ways.
 ### Output Directory
 
 If left empty, DEVILS will automatically create an 'output' folder in the same folder as the original image. 
-It can be useful to set it to a different disk in order to maximize the read-write speed of DEVILS. In case the DEVILS image is written on the same disk as the one from which the image is read, a drop in performance can be percieved, as reading and writing is happening on the same disk.
+It can be useful to set it to a different disk in order to maximize the read-write speed of DEVILS. In case the DEVILS image is written on the same disk as the one from which the image is read, a drop in performance can be perceived, as reading and writing is happening on the same disk.
 
 ### Minimum (resp Maximum) for final conversion step
 
@@ -146,20 +155,25 @@ See [above](#minimum-resp-maximum-for-final-conversion-step) for a description o
 This is used in conjunction with the Minimum and Maximum values, and helps to reduce the size of the DEVILS image. As the idea of DEVILS is to view wildly varing intensities efficiently by humans, a **8-bit** output is often more than enough when the **Minimum** and **Maximum** values are appropriately set for your data. 
 You can use the **32-bit** output to see the **raw non-rescaled DEVILS image** in order to estimate the **Minimum** and **Maximum** values to use for your dataset. We suggest you do this on a small subset of your data.
 
-## Opening DEVILS Folder 
+# What is the output of DEVILS (basic and advanced) plugin ?
 
-The output for DEVILS is a directory inside which the planes are either saved as individual TIFFs or an HDF5 file (If you selected this option). 
-Both have an acompanying `DEVILSParameters.json` file.  
+DEVILS generates a series of tiff files, each file being a single z-plane of a single channel of a single timepoint. 
+If your original image consists of a single z-stack or a simple time series, the processed image can be simply opened via `File>Import>Image Sequence...`.
+However, more complex 4D or 5D stacks, as well as multi series images, requires additional information from the original image in order to be re-opened properly.
 
-### HDF5/XML Files
+That's why, in addition to tiff files, an additional `DEVILSParameters.json` file is created, which contains some metadata informations, as well as the parameters used to process the image.
+This file can be used in order to open conveniently the processed in ImageJ (see `Opening TIFF Files / Opening DEVILS Folder`).
 
-- The HDF5 file can be opened with `Plugins > bigDataViewer > Open XML/HDF5`
+In addition to these tiffs + json file, if you selected the associated option, you also have a nested folder which can contain an xml file and a hdf5 file (see `Opening HDF5/XML Files`).
 
-### TIFF Files
+### Opening TIFF Files / Opening DEVILS Folder
 
 The tiff files can be opened using `File > Import > Image Sequence...` and defining the correct number of channels, slices and frames.  
-Instead of `Image Sequence`, the **Open DEVILS Folder** Command opens a DEVILS folder as a Virtual Stack by pointing it to the `DEVILSParameters.json` file in the output folder of DEVILS. This avoids the inconvenience of having to define the structure of the sequence by hand when opening a DEVILS result. 
+Instead of `Image Sequence`, the **Open DEVILS Folder** Command opens a DEVILS folder as a Virtual Stack by pointing it to the `DEVILSParameters.json` file in the output folder of DEVILS. This avoids the inconvenience of having to define the structure of the sequence by hand when opening a DEVILS result.
 
+### Opening HDF5/XML Files
+
+The HDF5 file can be opened with `Plugins > bigDataViewer > Open XML/HDF5`
 
 # Tutorial, Example
 

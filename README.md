@@ -171,7 +171,7 @@ Instead of `Image Sequence`, the **Open DEVILS Folder** Command opens a DEVILS f
 
 ### Opening HDF5/XML Files
 
-The HDF5 file can be opened with `Plugins > bigDataViewer > Open XML/HDF5`
+The HDF5 file can be opened with `Plugins > BigDataViewer > Open XML/HDF5`
 
 # Tutorial, Example
 

@@ -160,6 +160,7 @@ These parameters allow you to fine-tune the output of DEVILS in different ways.
 ### Output Directory
 
 If left empty, DEVILS will automatically create an 'output' folder in the same folder as the original image. 
+
 It can be useful to set it to a different disk in order to maximize the read-write speed of DEVILS. In case the DEVILS image is written on the same disk as the one from which the image is read, a drop in performance can be perceived, as reading and writing is happening on the same disk.
 
 ### Minimum (resp Maximum) for final conversion step

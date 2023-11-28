@@ -3,9 +3,7 @@
 **Once you summon DEVILS, you cannot quantify your image anymore! This tool is made for visual inspection ONLY!**
 
 This repository is the Fiji implementation of the following publication:
-
-*Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
-
+- *Guiet R, Burri O, Chiaruttini N, Hagens O and Seitz A* **DEVILS: a tool for the visualization of large datasets with a high dynamic range** 
 [version 1; peer review: 1 approved with reservations]. F1000Research 2020, 9:1380 (https://doi.org/10.12688/f1000research.25447.1)
 
 Please cite this paper if you make use of DEVILS in your research.
@@ -105,11 +103,19 @@ Selecting this checkbox will bring up the DEVILS advanced parameters window afte
 
 ## DEVILS Preview ( Advanced )
 The preview command works on the currently open image.
-The advanced preview allows you to specify different parameters for each image channel, as well as other internal parameters that are otherwise set to sensible defaults in the Basic mode.
+The advanced preview allows you to specify different parameters for each image channel, as well as other internal parameters that are otherwise set to sensible defaults in the Basic mode (min at -100, max at 10000).
 ![DEVILS Preview ( Advanced) GUI](https://raw.githubusercontent.com/BIOP/ijp-DEVILS/master/images/DEVILS-preview-advanced-gui.png)
-When launched, it creates a (virtual) copy of the active image stack, and displays the effect of DEVILS as you change the parameters and press the "Create or Update Preview" button.
 
-**NOTE** The responsiveness of the Preview mode is highly dependent on the size of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
+When launched, the user interface waits for you to define the parameters for each channel (using comma separated value). 
+Once you have defined the parameters, press the "Create and Update Preview" button to create a (virtual) copy of the active image stack.
+You can now navigate between channels and slices to visualize the effect of the current parameters. The processing of the current plane is done on the fly and might take a few seconds depending of your image size.
+Shall you change parameters , please click on "Create and Update Preview" button.
+
+**NOTE** : 
+- You might need to adjust the "Brightness & Contrast" of the DEVILS image
+- We recommend to stay with the grayscale display (rather than composite mode) 
+- The responsiveness of the Preview mode is highly dependent on the size of your dataset. We recommend that you **crop** your dataset to a manageable size (512x512 pixels in XY) before running it. Otherwise the interface might be slow and unresponsive.
+
 
 ### Largest object size (in pixel) parameter
 
@@ -120,14 +126,24 @@ Same as in basic mode, except you can now define a largest object size for each 
 Because DEVILS modifies the intensity values though the Gaussian division, square root and background subtraction, the final DEVILS image will have an arbitrary intensity range. In order to rescale this range linearly to an 8-bit or 16-bit  output, values must be chosen for the minimum intensity (which will correspond to 0 intensity afterwards, anything below will be clipped to 0) and the maximum (which will correspond to 255 intensity or 65535 intensity for 8-bit and 16-bit respectively, anything above will be clipped).
 You need to select the values for each channel independently and the number of parameters must be identical to the number of channels in your image. 
 In basic mode, the minimum and maximum values are hard-set to -100 and 10'000 for each channel. 
+See [How to choose the advanced parameters](#How-to-choose-the-advanced-parameters) below.
 
 ### Start DEVILS with the current parameter
 This button starts the advanced DEVILS interface (see below) with the current parameter values. If you start the advanced DEVILS interface from the preview, the pre-filled parameters will not show up in the advanced interface.
 
 ## How to choose the advanced parameters
 
-Our suggestion is to run DEVILS without advanced parameters on a subset of your image. 
-DEVILS will print the minimum and maximum values of this dataset to the ImageJ Log window, which you can then use when processing your full dataset. 
+Our suggestion is to use :
+
+Brute force : by run DEVILS without advanced parameters on a subset of your image. DEVILS will print the minimum and maximum values of this dataset to the ImageJ Log window, which you can then use when processing your full dataset.
+ 
+DEVILS Preview : 
+ - Crop a part of your image with a high dynamic range,
+ - Run DEVILS Preview (Advanced), 
+ - Select output 32-bit
+ - "Create and Update Preview" button, 
+ - Open histogram of the image (```Analyze > Histogram```)
+ - Look at minimum and maximum value.
 
 This is especially useful when batch processing multiple files, as this ensures that all files have been treated the same way by DEVILS when using the Advanced mode. 
 
@@ -144,6 +160,7 @@ These parameters allow you to fine-tune the output of DEVILS in different ways.
 ### Output Directory
 
 If left empty, DEVILS will automatically create an 'output' folder in the same folder as the original image. 
+
 It can be useful to set it to a different disk in order to maximize the read-write speed of DEVILS. In case the DEVILS image is written on the same disk as the one from which the image is read, a drop in performance can be perceived, as reading and writing is happening on the same disk.
 
 ### Minimum (resp Maximum) for final conversion step
@@ -173,7 +190,7 @@ Instead of `Image Sequence`, the **Open DEVILS Folder** Command opens a DEVILS f
 
 ### Opening HDF5/XML Files
 
-The HDF5 file can be opened with `Plugins > bigDataViewer > Open XML/HDF5`
+The HDF5 file can be opened with `Plugins > BigDataViewer > Open XML/HDF5`
 
 # Tutorial, Example
 

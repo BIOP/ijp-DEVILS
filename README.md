@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/	 	<connection>https://c4science.ch/source/ijp-DEVILS.git</connection>/actions/workflows/build.yml/badge.svg)](https://github.com/	 	<connection>https://c4science.ch/source/ijp-DEVILS.git</connection>/actions/workflows/build.yml)
+
 # DEVILS: Display Enhancement For Visual Inspection of Large Stacks
 
 **Once you summon DEVILS, you cannot quantify your image anymore! This tool is made for visual inspection ONLY!**

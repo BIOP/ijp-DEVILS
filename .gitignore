@@ -7,6 +7,4 @@
 .idea
 .idea/
 *.iml
-*.xml
 /target/
-

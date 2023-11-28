@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>36.0.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>ch.epfl.biop</groupId>
+	<artifactId>DEVILS_</artifactId>
+	<version>1.0.3-SNAPSHOT</version>
+
+	<name>DEVILS</name>
+	<description>DEVILS as an ImageJ 1.x plugin.</description>
+	<url>http://biop.epfl.ch</url>
+	<inceptionYear>2017</inceptionYear>
+	<organization>
+		<name>BIOP</name>
+		<url>http://biop.epfl.ch</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Simplified BSD License</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>romainGuiet</id>
+			<name>Romain Guiet</name>
+			<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<contributors>
+		<contributor>
+			<name>Olivier Burri</name>
+			<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+			<properties><id>lacan</id></properties>
+		</contributor>
+		<contributor>
+			<name>Nicolas Chiaruttini</name>
+			<url>https://www.epfl.ch/research/facilities/ptbiop/staff/</url>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+			<properties><id>chiarutt</id></properties>
+		</contributor>
+	</contributors>
+
+	<mailingLists>
+		<mailingList>
+			<name>N/A</name>
+			<archive>N/A</archive>
+		</mailingList>
+	</mailingLists>
+
+	 <scm>
+	 	<connection>scm:git:https://github.com/BIOP/ijp-DEVILS</connection>
+	    <developerConnection>scm:git:git@github.com:BIOP/ijp-DEVILS</developerConnection>
+	    <tag>HEAD</tag>
+	    <url>https://github.com/BIOP/ijp-DEVILS</url>
+	 </scm>
+
+	<issueManagement>
+		<system>GitHub Action</system>
+		<url>https://github.com/BIOP/ijp-DEVILS/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>GitHub Actions</system>
+		<url>https://github.com/BIOP/ijp-DEVILS/actions</url>
+	</ciManagement>
+
+	<properties>
+		<package-name>ch.epfl.biop</package-name>
+		<main-class>ch.epfl.biop.DEVILS_</main-class>
+		<license.licenseName>N/A</license.licenseName>
+		<license.copyrightOwners>N/A</license.copyrightOwners>
+		<!--<imagej.app.directory>C:/Fiji/</imagej.app.directory>-->
+		<!--<scijava.app.directory>C:\Users\chiarutt\Desktop\fiji-win64-biop\Fiji.app</scijava.app.directory>-->
+		<bigdataviewer-spimdata-extras.version>0.4.0</bigdataviewer-spimdata-extras.version>
+
+		<!-- NB: Deploy releases to the SciJava Maven repository. -->
+		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>ch.epfl.biop</groupId>
+			<artifactId>bigdataviewer-spimdata-extras</artifactId>
+			<version>${bigdataviewer-spimdata-extras.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer_fiji</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-legacy</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ome</groupId>
+			<artifactId>bio-formats_plugins</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ome</groupId>
+			<artifactId>formats-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>fiji-lib</artifactId>
+		</dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>scijava-common</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-deprecated</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>SPIM_Registration</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>vecmath</artifactId>
+		</dependency>
+	</dependencies>
+	
+</project>

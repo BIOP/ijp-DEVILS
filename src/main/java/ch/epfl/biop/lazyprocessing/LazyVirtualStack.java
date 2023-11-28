@@ -58,7 +58,7 @@ public class LazyVirtualStack extends VirtualStack {
         this.imagePlusLocalizer = imp;
     }
 
-    /** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
+    /** Returns the pixel array for the specified slice, were 1 is inferior or equals to n which is inferior or equals to nslices. */
     public Object getPixels(int n) {
         ImageProcessor ip = getProcessor(n);
         if (ip!=null)

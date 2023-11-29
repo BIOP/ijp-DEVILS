@@ -39,7 +39,7 @@ public class DevilParam {
 	
 	String defaultPath;
 	
-	int objectSize;
+	int objectSize = 25;
 	
 	boolean advancedParam;
 	
@@ -460,9 +460,13 @@ public class DevilParam {
 			float[] param_to_check_array = stringToArrayFloat( param_to_check, defaultValue);
 			
 			// check if size of the array correspond to number of channels
-			if (param_to_check_array.length == nChannel){
+			if (param_to_check_array.length == nChannel) {
 				param_checked 	= param_to_check_array;
-			}else{//otherwise replace by default value
+			} else if (param_to_check_array.length == 1) {
+				IJ.log("The value "+param_to_check_array[0]+" will be used for all channels ");
+				Arrays.fill(param_checked, param_to_check_array[0]);
+			} else {//otherwise replace by default value
+				IJ.log("Using default value "+defaultValue+" since the string parameter "+param_to_check+" do not matches the number of channels ("+nChannel+"). ");
 				Arrays.fill(param_checked, defaultValue);
 			}
 		} else {// if automode, return a array filled with defaultValue

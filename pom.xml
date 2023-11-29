@@ -11,7 +11,7 @@
 
 	<groupId>ch.epfl.biop</groupId>
 	<artifactId>DEVILS_</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 
 	<name>DEVILS</name>
 	<description>DEVILS as an ImageJ 1.x plugin.</description>
@@ -88,7 +88,7 @@
 	 <scm>
 	 	<connection>scm:git:https://github.com/BIOP/ijp-DEVILS</connection>
 	    <developerConnection>scm:git:git@github.com:BIOP/ijp-DEVILS</developerConnection>
-	    <tag>HEAD</tag>
+	    <tag>DEVILS_-1.0.4</tag>
 	    <url>https://github.com/BIOP/ijp-DEVILS</url>
 	 </scm>
 

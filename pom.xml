@@ -11,7 +11,7 @@
 
 	<groupId>ch.epfl.biop</groupId>
 	<artifactId>DEVILS_</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 
 	<name>DEVILS</name>
 	<description>DEVILS as an ImageJ 1.x plugin.</description>
